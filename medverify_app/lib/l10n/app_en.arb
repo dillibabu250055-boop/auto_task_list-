@@ -1,0 +1,23 @@
+{
+  "appTitle": "MedVerify Connect",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+  "syncing": "Syncing offline data...",
+  "@syncing": {
+    "description": "Message shown when syncing offline data"
+  },
+  "activePatients": "Active Patients",
+  "missedDoses": "Missed Doses",
+  "patientProfiles": "Patient Profiles",
+  "adherence": "Adherence",
+  "newPrescription": "New Prescription",
+  "digitizePrescription": "Digitize Prescription",
+  "scanDocument": "Scan Document",
+  "extractedInformation": "Extracted Information",
+  "verifyDetails": "Verify Details",
+  "medicineName": "Medicine Name",
+  "dosageInstructions": "Dosage Instructions",
+  "saveAndSchedule": "Save & Schedule Alerts",
+  "verificationComplete": "Verification complete. Alerts scheduled."
+}

@@ -1,0 +1,133 @@
+﻿Launching lib\main.dart on Chrome in debug mode...
+Waiting for connection from debug service on Chrome...          
+flutter : /C:/Users/Dilli%20Babu%20S/AppData/L
+ocal/Pub/Cache/hosted/pub.dev/libserialport-0.
+3.0+1/lib/src/config.dart:25:8: Error: Dart 
+library 'dart:ffi' is not available on this 
+platform.
+At line:1 char:35
++ ... ame chrome -Force; flutter run -d 
+chrome --web-port 8080 2>&1 | Out-F ...
++                        
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ( 
+   /C:/Users/Dilli... this platform.:String)  
+   [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandEr 
+   ror
+ 
+import 'dart:ffi' as ffi;
+       ^
+/C:/Users/Dilli%20Babu%20S/AppData/Local/Pub/C
+ache/hosted/pub.dev/libserialport-0.3.0+1/lib/
+src/port.dart:25:8: Error: Dart library 
+'dart:ffi' is not available on this platform.
+import 'dart:ffi' as ffi;
+       ^
+/C:/Users/Dilli%20Babu%20S/AppData/Local/Pub/C
+ache/hosted/pub.dev/libserialport-0.3.0+1/lib/
+src/reader.dart:26:8: Error: Dart library 
+'dart:ffi' is not available on this platform.
+import 'dart:ffi' as ffi;
+       ^
+/C:/Users/Dilli%20Babu%20S/AppData/Local/Pub/C
+ache/hosted/pub.dev/libserialport-0.3.0+1/lib/
+src/bindings.dart:6:8: Error: Dart library 
+'dart:ffi' is not available on this platform.
+import 'dart:ffi' as ffi;
+       ^
+/C:/Users/Dilli%20Babu%20S/AppData/Local/Pub/C
+ache/hosted/pub.dev/libserialport-0.3.0+1/lib/
+src/dylib.dart:25:8: Error: Dart library 
+'dart:ffi' is not available on this platform.
+import 'dart:ffi' as ffi;
+       ^
+/C:/Users/Dilli%20Babu%20S/AppData/Local/Pub/C
+ache/hosted/pub.dev/libserialport-0.3.0+1/lib/
+src/util.dart:26:8: Error: Dart library 
+'dart:ffi' is not available on this platform.
+import 'dart:ffi' as ffi;
+       ^
+/C:/Users/Dilli%20Babu%20S/AppData/Local/Pub/C
+ache/hosted/pub.dev/ffi-2.2.0/lib/src/allocati
+on.dart:5:8: Error: Dart library 'dart:ffi' 
+is not available on this platform.
+import 'dart:ffi';
+       ^
+/C:/Users/Dilli%20Babu%20S/AppData/Local/Pub/C
+ache/hosted/pub.dev/ffi-2.2.0/lib/src/arena.da
+rt:8:8: Error: Dart library 'dart:ffi' is not 
+available on this platform.
+import 'dart:ffi';
+       ^
+/C:/Users/Dilli%20Babu%20S/AppData/Local/Pub/C
+ache/hosted/pub.dev/ffi-2.2.0/lib/src/utf16.da
+rt:5:8: Error: Dart library 'dart:ffi' is not 
+available on this platform.
+import 'dart:ffi';
+       ^
+/C:/Users/Dilli%20Babu%20S/AppData/Local/Pub/C
+ache/hosted/pub.dev/ffi-2.2.0/lib/src/utf8.dar
+t:6:8: Error: Dart library 'dart:ffi' is not 
+available on this platform.
+import 'dart:ffi';
+       ^
+/C:/Users/Dilli%20Babu%20S/AppData/Local/Pub/C
+ache/hosted/pub.dev/libserialport-0.3.0+1/lib/
+src/util.dart:81:18: Error: A value of type 
+'Int' can't be returned from a function with 
+return type 'int?'.
+ - 'Int' is from 'dart:ffi'.
+      return ptr.value;
+                 ^
+/C:/Users/Dilli%20Babu%20S/AppData/Local/Pub/C
+ache/hosted/pub.dev/libserialport-0.3.0+1/lib/
+src/bindings.dart:2292:34: Error: Only JS 
+interop members may be 'external'.
+Try removing the 'external' keyword or adding 
+a JS interop annotation.
+  external ffi.Pointer<ffi.Void> handles;
+                                 ^
+/C:/Users/Dilli%20Babu%20S/AppData/Local/Pub/C
+ache/hosted/pub.dev/libserialport-0.3.0+1/lib/
+src/bindings.dart:2295:35: Error: Only JS 
+interop members may be 'external'.
+Try removing the 'external' keyword or adding 
+a JS interop annotation.
+  external ffi.Pointer<ffi.Int32> masks;
+                                  ^
+/C:/Users/Dilli%20Babu%20S/AppData/Local/Pub/C
+ache/hosted/pub.dev/libserialport-0.3.0+1/lib/
+src/bindings.dart:2299:16: Error: Only JS 
+interop members may be 'external'.
+Try removing the 'external' keyword or adding 
+a JS interop annotation.
+  external int count;
+               ^
+/C:/Users/Dilli%20Babu%20S/AppData/Local/Pub/C
+ache/hosted/pub.dev/ffi-2.2.0/lib/src/allocati
+on.dart:11:18: Error: Only JS interop members 
+may be 'external'.
+Try removing the 'external' keyword or adding 
+a JS interop annotation.
+external Pointer posixMalloc(int size);
+                 ^
+/C:/Users/Dilli%20Babu%20S/AppData/Local/Pub/C
+ache/hosted/pub.dev/ffi-2.2.0/lib/src/allocati
+on.dart:16:18: Error: Only JS interop members 
+may be 'external'.
+Try removing the 'external' keyword or adding 
+a JS interop annotation.
+external Pointer posixCalloc(int num, int 
+size);
+                 ^
+/C:/Users/Dilli%20Babu%20S/AppData/Local/Pub/C
+ache/hosted/pub.dev/ffi-2.2.0/lib/src/allocati
+on.dart:21:15: Error: Only JS interop members 
+may be 'external'.
+Try removing the 'external' keyword or adding 
+a JS interop annotation.
+external void posixFree(Pointer ptr);
+              ^
+Waiting for connection from debug service on Chrome...             79.4s
+Failed to compile application.

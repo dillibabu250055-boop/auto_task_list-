@@ -1,0 +1,18 @@
+﻿Analyzing medverify_app...                                      
+
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\digitizer\verification_form_screen.dart:85:19 - deprecated_member_use
+
+flutter : 1 issue found. (ran in 
+5.8s)
+At line:1 char:1
++ flutter analyze --no-pub 2>&1 | 
+Out-File -FilePath final_check.txt 
+-E ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpe 
+   cified: (1 issue found. (ran in   
+  5.8s):String) [], RemoteExceptio   
+ n
+    + FullyQualifiedErrorId : Native 
+   CommandError
+ 

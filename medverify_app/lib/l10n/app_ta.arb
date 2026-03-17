@@ -1,0 +1,17 @@
+{
+  "appTitle": "மெட்வெரிஃபை கனெக்ட்",
+  "syncing": "ஆஃப்லைன் தரவு ஒத்திசைக்கப்படுகிறது...",
+  "activePatients": "செயலிலுள்ள நோயாளிகள்",
+  "missedDoses": "தவறவிட்ட மருந்து அளவுகள்",
+  "patientProfiles": "நோயாளி விவரங்கள்",
+  "adherence": "கடைப்பிடித்தல்",
+  "newPrescription": "புதிய மருந்துச் சீட்டு",
+  "digitizePrescription": "மருந்துச் சீட்டை டிஜிட்டலாக்கு",
+  "scanDocument": "ஆவணத்தை ஸ்கேன் செய்",
+  "extractedInformation": "பிரித்தெடுக்கப்பட்ட தகவல்",
+  "verifyDetails": "விவரங்களைச் சரிபார்",
+  "medicineName": "மருந்தின் பெயர்",
+  "dosageInstructions": "மருந்தளவு வழிமுறைகள்",
+  "saveAndSchedule": "சேமி & விழிப்பூட்டல்களைத் திட்டமிடு",
+  "verificationComplete": "சரிபார்ப்பு முடிந்தது. விழிப்பூட்டல்கள் திட்டமிடப்பட்டுள்ளன."
+}

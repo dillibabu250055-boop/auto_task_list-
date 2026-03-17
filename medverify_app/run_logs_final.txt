@@ -1,0 +1,545 @@
+﻿Launching lib\main.dart on Chrome in debug mode...
+Waiting for connection from debug service on Chrome...          
+flutter : /C:/Users/Dilli%20Babu%20S/AppData/L
+ocal/Pub/Cache/hosted/pub.dev/libserialport-0.
+3.0+1/lib/src/config.dart:25:8: Error: Dart 
+library 'dart:ffi' is not available on this 
+platform.
+At line:1 char:33
++ ... ; flutter pub get; flutter run -d 
+chrome --web-port 8080 2>&1 | Out-F ...
++                        
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ( 
+   /C:/Users/Dilli... this platform.:String)  
+   [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandEr 
+   ror
+ 
+import 'dart:ffi' as ffi;
+       ^
+/C:/Users/Dilli%20Babu%20S/AppData/Local/Pub/C
+ache/hosted/pub.dev/libserialport-0.3.0+1/lib/
+src/port.dart:25:8: Error: Dart library 
+'dart:ffi' is not available on this platform.
+import 'dart:ffi' as ffi;
+       ^
+/C:/Users/Dilli%20Babu%20S/AppData/Local/Pub/C
+ache/hosted/pub.dev/libserialport-0.3.0+1/lib/
+src/reader.dart:26:8: Error: Dart library 
+'dart:ffi' is not available on this platform.
+import 'dart:ffi' as ffi;
+       ^
+/C:/Users/Dilli%20Babu%20S/AppData/Local/Pub/C
+ache/hosted/pub.dev/libserialport-0.3.0+1/lib/
+src/bindings.dart:6:8: Error: Dart library 
+'dart:ffi' is not available on this platform.
+import 'dart:ffi' as ffi;
+       ^
+/C:/Users/Dilli%20Babu%20S/AppData/Local/Pub/C
+ache/hosted/pub.dev/libserialport-0.3.0+1/lib/
+src/dylib.dart:25:8: Error: Dart library 
+'dart:ffi' is not available on this platform.
+import 'dart:ffi' as ffi;
+       ^
+/C:/Users/Dilli%20Babu%20S/AppData/Local/Pub/C
+ache/hosted/pub.dev/libserialport-0.3.0+1/lib/
+src/util.dart:26:8: Error: Dart library 
+'dart:ffi' is not available on this platform.
+import 'dart:ffi' as ffi;
+       ^
+/C:/Users/Dilli%20Babu%20S/AppData/Local/Pub/C
+ache/hosted/pub.dev/ffi-2.2.0/lib/src/allocati
+on.dart:5:8: Error: Dart library 'dart:ffi' 
+is not available on this platform.
+import 'dart:ffi';
+       ^
+/C:/Users/Dilli%20Babu%20S/AppData/Local/Pub/C
+ache/hosted/pub.dev/ffi-2.2.0/lib/src/arena.da
+rt:8:8: Error: Dart library 'dart:ffi' is not 
+available on this platform.
+import 'dart:ffi';
+       ^
+/C:/Users/Dilli%20Babu%20S/AppData/Local/Pub/C
+ache/hosted/pub.dev/ffi-2.2.0/lib/src/utf16.da
+rt:5:8: Error: Dart library 'dart:ffi' is not 
+available on this platform.
+import 'dart:ffi';
+       ^
+/C:/Users/Dilli%20Babu%20S/AppData/Local/Pub/C
+ache/hosted/pub.dev/ffi-2.2.0/lib/src/utf8.dar
+t:6:8: Error: Dart library 'dart:ffi' is not 
+available on this platform.
+import 'dart:ffi';
+       ^
+lib/features/dashboard/dashboard_screen.dart:8
+7:55: Error: Required named parameter 
+'patientsCount' must be provided.
+                              return 
+_PremiumStatsGrid(missedCount: missedCount, 
+l10n: l10n);
+                                              
+        ^
+lib/features/dashboard/dashboard_screen.dart:1
+46:9: Context: Found this candidate, but the 
+arguments don't match.
+  const _PremiumStatsGrid({
+        ^^^^^^^^^^^^^^^^^
+/C:/Users/Dilli%20Babu%20S/AppData/Local/Pub/C
+ache/hosted/pub.dev/libserialport-0.3.0+1/lib/
+src/util.dart:81:18: Error: A value of type 
+'Int' can't be returned from a function with 
+return type 'int?'.
+ - 'Int' is from 'dart:ffi'.
+      return ptr.value;
+                 ^
+/C:/Users/Dilli%20Babu%20S/AppData/Local/Pub/C
+ache/hosted/pub.dev/libserialport-0.3.0+1/lib/
+src/bindings.dart:2292:34: Error: Only JS 
+interop members may be 'external'.
+Try removing the 'external' keyword or adding 
+a JS interop annotation.
+  external ffi.Pointer<ffi.Void> handles;
+                                 ^
+/C:/Users/Dilli%20Babu%20S/AppData/Local/Pub/C
+ache/hosted/pub.dev/libserialport-0.3.0+1/lib/
+src/bindings.dart:2295:35: Error: Only JS 
+interop members may be 'external'.
+Try removing the 'external' keyword or adding 
+a JS interop annotation.
+  external ffi.Pointer<ffi.Int32> masks;
+                                  ^
+/C:/Users/Dilli%20Babu%20S/AppData/Local/Pub/C
+ache/hosted/pub.dev/libserialport-0.3.0+1/lib/
+src/bindings.dart:2299:16: Error: Only JS 
+interop members may be 'external'.
+Try removing the 'external' keyword or adding 
+a JS interop annotation.
+  external int count;
+               ^
+/C:/Users/Dilli%20Babu%20S/AppData/Local/Pub/C
+ache/hosted/pub.dev/ffi-2.2.0/lib/src/allocati
+on.dart:11:18: Error: Only JS interop members 
+may be 'external'.
+Try removing the 'external' keyword or adding 
+a JS interop annotation.
+external Pointer posixMalloc(int size);
+                 ^
+/C:/Users/Dilli%20Babu%20S/AppData/Local/Pub/C
+ache/hosted/pub.dev/ffi-2.2.0/lib/src/allocati
+on.dart:16:18: Error: Only JS interop members 
+may be 'external'.
+Try removing the 'external' keyword or adding 
+a JS interop annotation.
+external Pointer posixCalloc(int num, int 
+size);
+                 ^
+/C:/Users/Dilli%20Babu%20S/AppData/Local/Pub/C
+ache/hosted/pub.dev/ffi-2.2.0/lib/src/allocati
+on.dart:21:15: Error: Only JS interop members 
+may be 'external'.
+Try removing the 'external' keyword or adding 
+a JS interop annotation.
+external void posixFree(Pointer ptr);
+              ^
+Unhandled exception:
+Unsupported operation: Unsupported invalid 
+type InvalidType(<invalid>) (InvalidType). 
+Encountered while compiling file:///D:/LANGUAG
+E%20C/medverify_app/lib/features/dashboard/das
+hboard_screen.dart, which contains the type: 
+FunctionType(<invalid> Function(BuildContext, 
+AsyncSnapshot<List<DoseEvent>>)).
+#0      LibraryCompiler._typeCompilationError 
+(package:dev_compiler/src/kernel/compiler_new.
+dart:4480)
+#1      LibraryCompiler._emitType (package:dev
+_compiler/src/kernel/compiler_new.dart:4445)
+#2      LibraryCompiler._emitFunctionTagged (p
+ackage:dev_compiler/src/kernel/compiler_new.da
+rt:4292)
+#3      
+LibraryCompiler.visitFunctionExpression (packa
+ge:dev_compiler/src/kernel/compiler_new.dart:8
+894)
+#4      FunctionExpression.accept 
+(package:kernel/src/ast/expressions.dart:4695)
+#5      LibraryCompiler._visitExpression (pack
+age:dev_compiler/src/kernel/compiler_new.dart:
+5147)
+#6      LibraryCompiler._emitNamedExpression (
+package:dev_compiler/src/kernel/compiler_new.d
+art:8063)
+#7      LibraryCompiler._emitArgumentGroups (p
+ackage:dev_compiler/src/kernel/compiler_new.da
+rt:8053)
+#8      LibraryCompiler._emitArgumentList (pac
+kage:dev_compiler/src/kernel/compiler_new.dart
+:8007)
+#9      
+LibraryCompiler.visitConstructorInvocation (pa
+ckage:dev_compiler/src/kernel/compiler_new.dar
+t:8309)
+#10     ConstructorInvocation.accept 
+(package:kernel/src/ast/expressions.dart:2695)
+#11     LibraryCompiler._visitExpression (pack
+age:dev_compiler/src/kernel/compiler_new.dart:
+5147)
+#12     LibraryCompiler._emitNamedExpression (
+package:dev_compiler/src/kernel/compiler_new.d
+art:8063)
+#13     LibraryCompiler._emitArgumentGroups (p
+ackage:dev_compiler/src/kernel/compiler_new.da
+rt:8053)
+#14     LibraryCompiler._emitArgumentList (pac
+kage:dev_compiler/src/kernel/compiler_new.dart
+:8007)
+#15     
+LibraryCompiler.visitConstructorInvocation (pa
+ckage:dev_compiler/src/kernel/compiler_new.dar
+t:8309)
+#16     ConstructorInvocation.accept 
+(package:kernel/src/ast/expressions.dart:2695)
+#17     LibraryCompiler._visitExpression (pack
+age:dev_compiler/src/kernel/compiler_new.dart:
+5147)
+#18     LibraryCompiler._emitArgumentGroups (p
+ackage:dev_compiler/src/kernel/compiler_new.da
+rt:8044)
+#19     LibraryCompiler._emitArgumentList (pac
+kage:dev_compiler/src/kernel/compiler_new.dart
+:8007)
+#20     LibraryCompiler.visitStaticInvocation.
+generateCall (package:dev_compiler/src/kernel/
+compiler_new.dart:7710)
+#21     LibraryCompiler.visitStaticInvocation 
+(package:dev_compiler/src/kernel/compiler_new.
+dart:7733)
+#22     StaticInvocation.accept 
+(package:kernel/src/ast/expressions.dart:2611)
+#23     LibraryCompiler._visitExpression (pack
+age:dev_compiler/src/kernel/compiler_new.dart:
+5147)
+#24     LibraryCompiler._emitArgumentGroups (p
+ackage:dev_compiler/src/kernel/compiler_new.da
+rt:8044)
+#25     LibraryCompiler._emitArgumentList (pac
+kage:dev_compiler/src/kernel/compiler_new.dart
+:8007)
+#26     LibraryCompiler.visitStaticInvocation.
+generateCall (package:dev_compiler/src/kernel/
+compiler_new.dart:7710)
+#27     LibraryCompiler.visitStaticInvocation 
+(package:dev_compiler/src/kernel/compiler_new.
+dart:7733)
+#28     StaticInvocation.accept 
+(package:kernel/src/ast/expressions.dart:2611)
+#29     LibraryCompiler._visitExpression (pack
+age:dev_compiler/src/kernel/compiler_new.dart:
+5147)
+#30     LibraryCompiler._emitArgumentGroups (p
+ackage:dev_compiler/src/kernel/compiler_new.da
+rt:8044)
+#31     LibraryCompiler._emitArgumentList (pac
+kage:dev_compiler/src/kernel/compiler_new.dart
+:8007)
+#32     LibraryCompiler.visitStaticInvocation.
+generateCall (package:dev_compiler/src/kernel/
+compiler_new.dart:7710)
+#33     LibraryCompiler.visitStaticInvocation 
+(package:dev_compiler/src/kernel/compiler_new.
+dart:7733)
+#34     StaticInvocation.accept 
+(package:kernel/src/ast/expressions.dart:2611)
+#35     LibraryCompiler._visitExpression (pack
+age:dev_compiler/src/kernel/compiler_new.dart:
+5147)
+#36     MappedIterable.elementAt 
+(dart:_internal/iterable.dart:402)
+#37     ListIterator.moveNext 
+(dart:_internal/iterable.dart:371)
+#38     new 
+_GrowableList._ofEfficientLengthIterable 
+(dart:core-patch/growable_array.dart:194)
+#39     new _GrowableList.of 
+(dart:core-patch/growable_array.dart:154)
+#40     new List.of 
+(dart:core-patch/array_patch.dart:39)
+#41     SetBase.toList 
+(dart:collection/set.dart:119)
+#42     LibraryCompiler._visitExpressionList (
+package:dev_compiler/src/kernel/compiler_new.d
+art:5108)
+#43     LibraryCompiler.visitListLiteral (pack
+age:dev_compiler/src/kernel/compiler_new.dart:
+8742)
+#44     ListLiteral.accept 
+(package:kernel/src/ast/expressions.dart:4249)
+#45     LibraryCompiler._visitExpression (pack
+age:dev_compiler/src/kernel/compiler_new.dart:
+5147)
+#46     LibraryCompiler._emitNamedExpression (
+package:dev_compiler/src/kernel/compiler_new.d
+art:8063)
+#47     LibraryCompiler._emitArgumentGroups (p
+ackage:dev_compiler/src/kernel/compiler_new.da
+rt:8053)
+#48     LibraryCompiler._emitArgumentList (pac
+kage:dev_compiler/src/kernel/compiler_new.dart
+:8007)
+#49     
+LibraryCompiler.visitConstructorInvocation (pa
+ckage:dev_compiler/src/kernel/compiler_new.dar
+t:8309)
+#50     ConstructorInvocation.accept 
+(package:kernel/src/ast/expressions.dart:2695)
+#51     LibraryCompiler._visitExpression (pack
+age:dev_compiler/src/kernel/compiler_new.dart:
+5147)
+#52     LibraryCompiler._emitNamedExpression (
+package:dev_compiler/src/kernel/compiler_new.d
+art:8063)
+#53     LibraryCompiler._emitArgumentGroups (p
+ackage:dev_compiler/src/kernel/compiler_new.da
+rt:8053)
+#54     LibraryCompiler._emitArgumentList (pac
+kage:dev_compiler/src/kernel/compiler_new.dart
+:8007)
+#55     
+LibraryCompiler.visitConstructorInvocation (pa
+ckage:dev_compiler/src/kernel/compiler_new.dar
+t:8309)
+#56     ConstructorInvocation.accept 
+(package:kernel/src/ast/expressions.dart:2695)
+#57     LibraryCompiler._visitExpression (pack
+age:dev_compiler/src/kernel/compiler_new.dart:
+5147)
+#58     LibraryCompiler._emitNamedExpression (
+package:dev_compiler/src/kernel/compiler_new.d
+art:8063)
+#59     LibraryCompiler._emitArgumentGroups (p
+ackage:dev_compiler/src/kernel/compiler_new.da
+rt:8053)
+#60     LibraryCompiler._emitArgumentList (pac
+kage:dev_compiler/src/kernel/compiler_new.dart
+:8007)
+#61     
+LibraryCompiler.visitConstructorInvocation (pa
+ckage:dev_compiler/src/kernel/compiler_new.dar
+t:8309)
+#62     ConstructorInvocation.accept 
+(package:kernel/src/ast/expressions.dart:2695)
+#63     LibraryCompiler._visitExpression (pack
+age:dev_compiler/src/kernel/compiler_new.dart:
+5147)
+#64     MappedIterable.elementAt 
+(dart:_internal/iterable.dart:402)
+#65     ListIterator.moveNext 
+(dart:_internal/iterable.dart:371)
+#66     new 
+_GrowableList._ofEfficientLengthIterable 
+(dart:core-patch/growable_array.dart:194)
+#67     new _GrowableList.of 
+(dart:core-patch/growable_array.dart:154)
+#68     new List.of 
+(dart:core-patch/array_patch.dart:39)
+#69     SetBase.toList 
+(dart:collection/set.dart:119)
+#70     LibraryCompiler._visitExpressionList (
+package:dev_compiler/src/kernel/compiler_new.d
+art:5108)
+#71     LibraryCompiler.visitListLiteral (pack
+age:dev_compiler/src/kernel/compiler_new.dart:
+8742)
+#72     ListLiteral.accept 
+(package:kernel/src/ast/expressions.dart:4249)
+#73     LibraryCompiler._visitExpression (pack
+age:dev_compiler/src/kernel/compiler_new.dart:
+5147)
+#74     LibraryCompiler._emitNamedExpression (
+package:dev_compiler/src/kernel/compiler_new.d
+art:8063)
+#75     LibraryCompiler._emitArgumentGroups (p
+ackage:dev_compiler/src/kernel/compiler_new.da
+rt:8053)
+#76     LibraryCompiler._emitArgumentList (pac
+kage:dev_compiler/src/kernel/compiler_new.dart
+:8007)
+#77     
+LibraryCompiler.visitConstructorInvocation (pa
+ckage:dev_compiler/src/kernel/compiler_new.dar
+t:8309)
+#78     ConstructorInvocation.accept 
+(package:kernel/src/ast/expressions.dart:2695)
+#79     LibraryCompiler._visitExpression (pack
+age:dev_compiler/src/kernel/compiler_new.dart:
+5147)
+#80     LibraryCompiler._emitNamedExpression (
+package:dev_compiler/src/kernel/compiler_new.d
+art:8063)
+#81     LibraryCompiler._emitArgumentGroups (p
+ackage:dev_compiler/src/kernel/compiler_new.da
+rt:8053)
+#82     LibraryCompiler._emitArgumentList (pac
+kage:dev_compiler/src/kernel/compiler_new.dart
+:8007)
+#83     
+LibraryCompiler.visitConstructorInvocation (pa
+ckage:dev_compiler/src/kernel/compiler_new.dar
+t:8309)
+#84     ConstructorInvocation.accept 
+(package:kernel/src/ast/expressions.dart:2695)
+#85     LibraryCompiler._visitExpression (pack
+age:dev_compiler/src/kernel/compiler_new.dart:
+5147)
+#86     MappedIterable.elementAt 
+(dart:_internal/iterable.dart:402)
+#87     ListIterator.moveNext 
+(dart:_internal/iterable.dart:371)
+#88     new 
+_GrowableList._ofEfficientLengthIterable 
+(dart:core-patch/growable_array.dart:194)
+#89     new _GrowableList.of 
+(dart:core-patch/growable_array.dart:154)
+#90     new List.of 
+(dart:core-patch/array_patch.dart:39)
+#91     SetBase.toList 
+(dart:collection/set.dart:119)
+#92     LibraryCompiler._visitExpressionList (
+package:dev_compiler/src/kernel/compiler_new.d
+art:5108)
+#93     LibraryCompiler.visitListLiteral (pack
+age:dev_compiler/src/kernel/compiler_new.dart:
+8742)
+#94     ListLiteral.accept 
+(package:kernel/src/ast/expressions.dart:4249)
+#95     LibraryCompiler._visitExpression (pack
+age:dev_compiler/src/kernel/compiler_new.dart:
+5147)
+#96     LibraryCompiler._emitNamedExpression (
+package:dev_compiler/src/kernel/compiler_new.d
+art:8063)
+#97     LibraryCompiler._emitArgumentGroups (p
+ackage:dev_compiler/src/kernel/compiler_new.da
+rt:8053)
+#98     LibraryCompiler._emitArgumentList (pac
+kage:dev_compiler/src/kernel/compiler_new.dart
+:8007)
+#99     
+LibraryCompiler.visitConstructorInvocation (pa
+ckage:dev_compiler/src/kernel/compiler_new.dar
+t:8309)
+#100    ConstructorInvocation.accept 
+(package:kernel/src/ast/expressions.dart:2695)
+#101    LibraryCompiler._visitExpression (pack
+age:dev_compiler/src/kernel/compiler_new.dart:
+5147)
+#102    LibraryCompiler._emitNamedExpression (
+package:dev_compiler/src/kernel/compiler_new.d
+art:8063)
+#103    LibraryCompiler._emitArgumentGroups (p
+ackage:dev_compiler/src/kernel/compiler_new.da
+rt:8053)
+#104    LibraryCompiler._emitArgumentList (pac
+kage:dev_compiler/src/kernel/compiler_new.dart
+:8007)
+#105    
+LibraryCompiler.visitConstructorInvocation (pa
+ckage:dev_compiler/src/kernel/compiler_new.dar
+t:8309)
+#106    ConstructorInvocation.accept 
+(package:kernel/src/ast/expressions.dart:2695)
+#107    LibraryCompiler._visitExpression (pack
+age:dev_compiler/src/kernel/compiler_new.dart:
+5147)
+#108    LibraryCompiler.visitReturnStatement (
+package:dev_compiler/src/kernel/compiler_new.d
+art:5902)
+#109    ReturnStatement.accept 
+(package:kernel/src/ast/statements.dart:1097)
+#110    LibraryCompiler._visitStatement (packa
+ge:dev_compiler/src/kernel/compiler_new.dart:5
+044)
+#111    MappedIterable.elementAt 
+(dart:_internal/iterable.dart:402)
+#112    ListIterator.moveNext 
+(dart:_internal/iterable.dart:371)
+#113    new 
+_GrowableList._ofEfficientLengthIterable 
+(dart:core-patch/growable_array.dart:194)
+#114    new _GrowableList.of 
+(dart:core-patch/growable_array.dart:154)
+#115    new List.of 
+(dart:core-patch/array_patch.dart:39)
+#116    SetBase.toList 
+(dart:collection/set.dart:119)
+#117    LibraryCompiler.visitBlock (package:de
+v_compiler/src/kernel/compiler_new.dart:5257)
+#118    Block.accept 
+(package:kernel/src/ast/statements.dart:106)
+#119    LibraryCompiler._visitStatement (packa
+ge:dev_compiler/src/kernel/compiler_new.dart:5
+044)
+#120    
+LibraryCompiler._emitFunctionScopedBody (packa
+ge:dev_compiler/src/kernel/compiler_new.dart:5
+081)
+#121    
+LibraryCompiler._emitFunction.<anonymous 
+closure> (package:dev_compiler/src/kernel/comp
+iler_new.dart:4667)
+#122    LibraryCompiler._withLetScope (package
+:dev_compiler/src/kernel/compiler_new.dart:366
+1)
+#123    LibraryCompiler._withCurrentFunction (
+package:dev_compiler/src/kernel/compiler_new.d
+art:4841)
+#124    LibraryCompiler._emitFunction (package
+:dev_compiler/src/kernel/compiler_new.dart:465
+9)
+#125    LibraryCompiler._emitMethodDeclaration
+.<anonymous closure> (package:dev_compiler/src
+/kernel/compiler_new.dart:2941)
+#126    
+LibraryCompiler._withMethodDeclarationContext 
+(package:dev_compiler/src/kernel/compiler_new.
+dart:4866)
+#127    
+LibraryCompiler._emitMethodDeclaration (packag
+e:dev_compiler/src/kernel/compiler_new.dart:29
+39)
+#128    LibraryCompiler._emitClassProperties (
+package:dev_compiler/src/kernel/compiler_new.d
+art:2880)
+#129    LibraryCompiler._emitClassDeclaration 
+(package:dev_compiler/src/kernel/compiler_new.
+dart:1488)
+#130    LibraryCompiler._emitClass (package:de
+v_compiler/src/kernel/compiler_new.dart:1426)
+#131    List.forEach 
+(dart:core-patch/growable_array.dart:428)
+#132    LibraryCompiler._emitLibrary (package:
+dev_compiler/src/kernel/compiler_new.dart:1348
+)
+#133    LibraryCompiler.emitLibrary (package:d
+ev_compiler/src/kernel/compiler_new.dart:962)
+#134    LibraryBundleCompiler.emitModule (pack
+age:dev_compiler/src/kernel/compiler_new.dart:
+165)
+#135    IncrementalJavaScriptBundler.compile (
+package:frontend_server/src/javascript_bundle.
+dart:324)
+#136    
+FrontendCompiler.writeJavaScriptBundle (packag
+e:frontend_server/frontend_server.dart:922)
+<asynchronous suspension>
+#137    FrontendCompiler.compile (package:fron
+tend_server/frontend_server.dart:728)
+<asynchronous suspension>
+#138    listenAndCompile.<anonymous closure> (
+package:frontend_server/frontend_server.dart:1
+449)
+<asynchronous suspension>
+The Dart compiler exited unexpectedly.
+Waiting for connection from debug service on Chrome...            100.3s
+Failed to compile application.
