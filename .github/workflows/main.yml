@@ -10,14 +10,14 @@ jobs:
 
     defaults:
       run:
-        working-directory: medverify_app   # ⭐ IMPORTANT FIX
+        working-directory: medverify_app
 
     steps:
       - uses: actions/checkout@v3
 
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.22.0'
+          flutter-version: '3.27.0'
 
       - run: flutter pub get
 
