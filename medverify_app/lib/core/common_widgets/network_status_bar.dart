@@ -14,12 +14,12 @@ class NetworkStatusBar extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
       color: Colors.orange.shade900.withAlpha(200),
-      child: Row(
+      child: const Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.cloud_off_rounded, color: Colors.white, size: 14),
-          const SizedBox(width: 8),
-          const Text(
+          Icon(Icons.cloud_off_rounded, color: Colors.white, size: 14),
+          SizedBox(width: 8),
+          Text(
             'Working Locally - Changes will sync later',
             style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
           ),

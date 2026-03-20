@@ -86,14 +86,14 @@ class _VerificationFormScreenState extends ConsumerState<VerificationFormScreen>
               const SizedBox(height: 12),
               patientsAsync.when(
                 data: (patients) => DropdownButtonFormField<String>(
-                  value: _selectedPatientId,
+                  initialValue: _selectedPatientId,
                   decoration: _inputDecoration('Select Patient', Icons.person_outline),
                   items: patients.map((p) => DropdownMenuItem(value: p.id, child: Text(p.name))).toList(),
                   onChanged: (val) => setState(() => _selectedPatientId = val),
                   validator: (val) => val == null ? 'Patient required' : null,
                 ),
                 loading: () => const LinearProgressIndicator(),
-                error: (e, s) => Text('Error loading patients'),
+                error: (e, s) => const Text('Error loading patients'),
               ),
               const SizedBox(height: 24),
               _buildField('Medicine Name', _medicineController, Icons.medication_rounded),

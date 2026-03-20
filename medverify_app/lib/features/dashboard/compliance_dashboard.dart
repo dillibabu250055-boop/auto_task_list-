@@ -109,11 +109,11 @@ class ComplianceDashboard extends ConsumerWidget {
         borderRadius: BorderRadius.circular(24),
         border: Border.all(color: const Color(0xFF10B981).withAlpha(51)),
       ),
-      child: Column(
+      child: const Column(
         children: [
-          const Icon(Icons.check_circle_outline_rounded, size: 48, color: Color(0xFF10B981)),
-          const SizedBox(height: 16),
-          const Text('All patients are on track!', style: TextStyle(color: Color(0xFF10B981), fontWeight: FontWeight.bold)),
+          Icon(Icons.check_circle_outline_rounded, size: 48, color: Color(0xFF10B981)),
+          SizedBox(height: 16),
+          Text('All patients are on track!', style: TextStyle(color: Color(0xFF10B981), fontWeight: FontWeight.bold)),
         ],
       ),
     ).animate().fadeIn();

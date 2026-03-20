@@ -5,7 +5,6 @@ import 'dart:ui';
 import '../../core/locale_provider.dart';
 import '../../services/firestore_service.dart';
 import '../digitizer/scanner_screen.dart';
-import '../patients/patient_profile_screen.dart';
 import '../../l10n/app_localizations.dart';
 import '../../core/common_widgets/network_status_bar.dart';
 import '../../services/auth_service.dart';
@@ -117,10 +116,12 @@ class PatientDashboard extends ConsumerWidget {
                               builder: (context, snapshot) {
                                 if (snapshot.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator());
                                 final prescriptions = snapshot.data ?? [];
-                                if (prescriptions.isEmpty) return const Padding(
+                                if (prescriptions.isEmpty) {
+                                  return const Padding(
                                   padding: EdgeInsets.all(24.0),
                                   child: Center(child: Text('No active prescriptions', style: TextStyle(color: Colors.white54))),
                                 );
+                                }
                                 return ListView.builder(
                                   shrinkWrap: true,
                                   physics: const NeverScrollableScrollPhysics(),

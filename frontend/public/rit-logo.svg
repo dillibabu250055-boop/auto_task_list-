@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Outer Circle -->
+  <circle cx="100" cy="100" r="95" fill="#1565C0" stroke="#0d47a1" stroke-width="3"/>
+  
+  <!-- Inner Circle Background -->
+  <circle cx="100" cy="100" r="85" fill="#ffffff"/>
+  
+  <!-- College Initials Background -->
+  <circle cx="100" cy="100" r="75" fill="#1565C0"/>
+  
+  <!-- Text: RIT -->
+  <text x="100" y="120" font-size="48" font-weight="bold" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif">RIT</text>
+  
+  <!-- Decorative element: Book symbol -->
+  <g transform="translate(100, 50)">
+    <!-- Left page -->
+    <path d="M -15 0 L -15 25 Q 0 28 0 25 L 0 0 Z" fill="#FFD700" opacity="0.8"/>
+    <!-- Right page -->
+    <path d="M 15 0 L 15 25 Q 0 28 0 25 L 0 0 Z" fill="#FFA500" opacity="0.8"/>
+    <!-- Spine -->
+    <line x1="0" y1="0" x2="0" y2="25" stroke="#FF8C00" stroke-width="2"/>
+  </g>
+  
+  <!-- Bottom text: RAJALAKSHMI -->
+  <text x="100" y="180" font-size="10" font-weight="bold" text-anchor="middle" fill="#0d47a1" font-family="Arial, sans-serif">RAJALAKSHMI</text>
+</svg>

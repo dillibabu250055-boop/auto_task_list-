@@ -44,7 +44,7 @@ class MedVerifyApp extends ConsumerWidget {
       theme: AppTheme.premiumDarkTheme,
       themeMode: ThemeMode.dark,
       locale: locale,
-      localizationsDelegates: [
+      localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
