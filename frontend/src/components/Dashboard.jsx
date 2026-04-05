@@ -53,8 +53,16 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import CalendarView from "./CalendarView";
+import Chatbot from "./Chatbot";
+import EventIcon from "@mui/icons-material/Event";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
+import LightModeIcon from "@mui/icons-material/LightMode";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import Menu from "@mui/material/Menu";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
 
-const Dashboard = ({ user, onLogout }) => {
+const Dashboard = ({ user, onLogout, darkMode, toggleDarkMode }) => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeMainTab, setActiveMainTab] = useState(0);
@@ -74,7 +82,7 @@ const Dashboard = ({ user, onLogout }) => {
     appPassword: "",
     rememberPassword: false,
   });
-  const [filterAccount, setFilterAccount] = useState("all");
+  const [filterAccount, setFilterAccount] = useState("");
   const [savedAccounts, setSavedAccounts] = useState([]);
   const [syncMessage, setSyncMessage] = useState(null);
   const [syncSuccess, setSyncSuccess] = useState(false);
@@ -90,8 +98,15 @@ const Dashboard = ({ user, onLogout }) => {
   const [showNotification, setShowNotification] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState("");
   
+  // AppBar Menu State
+  const [anchorEl, setAnchorEl] = useState(null);
+  const handleMenuClick = (event) => setAnchorEl(event.currentTarget);
+  const handleMenuClose = () => setAnchorEl(null);
+  
   // Profile management
   const [openProfileDialog, setOpenProfileDialog] = useState(false);
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [editProfileData, setEditProfileData] = useState(null);
 
   // Load tasks and saved accounts on component mount
   useEffect(() => {
@@ -115,6 +130,7 @@ const Dashboard = ({ user, onLogout }) => {
           email: accounts[0].email,
           appPassword: "",
         });
+        setFilterAccount(accounts[0].email);
       }
     }
   };
@@ -287,8 +303,10 @@ const Dashboard = ({ user, onLogout }) => {
 
   const getTasksByStatus = (status) => {
     let filteredTasks = tasks.filter(task => task.status === status);
-    if (filterAccount !== "all") {
-      filteredTasks = filteredTasks.filter(task => task.syncedByEmail === filterAccount);
+    if (filterAccount) {
+      filteredTasks = filteredTasks.filter(task => 
+        !task.syncedByEmail || task.syncedByEmail === filterAccount
+      );
     }
     return filteredTasks;
   };
@@ -461,104 +479,89 @@ const Dashboard = ({ user, onLogout }) => {
   };
 
   return (
-    <Box sx={{ minHeight: "100vh", backgroundColor: "#f0f2f5" }}>
+    <Box sx={{ minHeight: "100vh", bgcolor: "background.default", color: "text.primary" }}>
       {/* Professional Header */}
-      <AppBar position="static" sx={{ backgroundColor: "#1565C0", boxShadow: "0 2px 8px rgba(0,0,0,0.1)" }}>
+      <AppBar position="static" color="primary" sx={{ boxShadow: "0 4px 20px rgba(0,0,0,0.05)" }}>
         <Toolbar>
+          {/* College Logo in AppBar */}
           <Box
-            component="img"
-            src="/rit-logo.svg"
-            alt="RIT Logo"
             sx={{
-              height: "45px",
-              width: "auto",
-              marginRight: "15px",
-              objectFit: "contain",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              bgcolor: "white",
+              borderRadius: "50%",
+              width: "44px",
+              height: "44px",
+              marginRight: "12px",
+              marginLeft: "4px",
+              boxShadow: "0 2px 8px rgba(0,0,0,0.25)",
+              flexShrink: 0,
+              p: 0.5,
             }}
-            onError={(e) => {
-              e.target.style.display = "none";
-            }}
-          />
+          >
+            <Box
+              component="img"
+              src="/rit-logo.png"
+              alt="RIT Logo"
+              sx={{ width: "100%", height: "100%", objectFit: "contain" }}
+              onError={(e) => { e.target.style.display = "none"; }}
+            />
+          </Box>
           <Box sx={{ display: "flex", flexDirection: "column", flexGrow: 0.3 }}>
             <Typography variant="h6" sx={{ fontWeight: "bold", lineHeight: 1 }}>
-              Rajalakshmi Institute of Technology
+              Auto Task Manager
             </Typography>
-            <Typography variant="caption" sx={{ fontSize: "0.65rem" }}>
-              Email Task Manager
+            <Typography variant="caption" sx={{ fontSize: "0.75rem", opacity: 0.8 }}>
+              Rajalakshmi Institute of Technology
             </Typography>
           </Box>
           
-          {/* User Profile Section */}
-          {user && (
-            <Box sx={{ display: "flex", alignItems: "center", gap: "15px", marginLeft: "20px" }}>
-              <Button
-                color="inherit"
-                startIcon={<ProfileIcon />}
-                onClick={() => setOpenProfileDialog(true)}
-                sx={{
-                  textAlign: "left",
-                  "&:hover": { backgroundColor: "rgba(255,255,255,0.2)" },
-                }}
-              >
-                <Box sx={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
-                  <Typography variant="body2" sx={{ fontWeight: "bold" }}>{user.name}</Typography>
-                  <Typography variant="caption" sx={{ fontSize: "0.7rem" }}>
-                    {user.role === "STUDENT" ? `${user.department} - Year ${user.yearOfStudy}` : user.position}
-                  </Typography>
-                </Box>
-              </Button>
-              <Divider orientation="vertical" variant="middle" sx={{ height: "30px", backgroundColor: "rgba(255,255,255,0.3)" }} />
-            </Box>
-          )}
-          
-          <Box sx={{ display: "flex", gap: "10px" }}>
-            <Button
-              color="inherit"
-              startIcon={<RefreshIcon />}
-              onClick={loadTasks}
-              disabled={loading}
-              sx={{
-                "&:hover": { backgroundColor: "rgba(255,255,255,0.2)" },
-              }}
+          {/* Top AppBar Options */}
+          <Box sx={{ display: "flex", gap: "10px", alignItems: "center", ml: "auto" }}>
+            
+            {user && (
+              <IconButton color="inherit" onClick={() => setOpenProfileDialog(true)} title="Profile">
+                <ProfileIcon />
+              </IconButton>
+            )}
+
+            <IconButton color="inherit" onClick={handleOpenSettingsDialog} title="Settings">
+              <SettingsIcon />
+            </IconButton>
+
+            <IconButton color="inherit" onClick={handleMenuClick} title="More Options">
+              <MoreVertIcon />
+            </IconButton>
+
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleMenuClose}
+              PaperProps={{ sx: { width: 220, mt: 1, boxShadow: "0 8px 32px rgba(0,0,0,0.15)" } }}
             >
-              Refresh
-            </Button>
-            <Button
-              color="inherit"
-              startIcon={<SettingsIcon />}
-              onClick={handleOpenSettingsDialog}
-              sx={{
-                "&:hover": { backgroundColor: "rgba(255,255,255,0.2)" },
-              }}
-            >
-              Settings
-            </Button>
-            <Button
-              variant="contained"
-              color="success"
-              startIcon={<SyncIcon />}
-              onClick={handleOpenEmailDialog}
-              sx={{
-                backgroundColor: "#43a047",
-                "&:hover": { backgroundColor: "#388e40" },
-                fontWeight: "bold",
-              }}
-            >
-              Sync Emails
-            </Button>
-            <Button
-              color="inherit"
-              startIcon={<LogoutIcon />}
-              onClick={() => {
-                localStorage.removeItem("user");
-                onLogout();
-              }}
-              sx={{
-                "&:hover": { backgroundColor: "rgba(255,255,255,0.2)" },
-              }}
-            >
-              Logout
-            </Button>
+              <MenuItem onClick={() => { loadTasks(); handleMenuClose(); }}>
+                <ListItemIcon><RefreshIcon fontSize="small" /></ListItemIcon>
+                <ListItemText>Refresh Tasks</ListItemText>
+              </MenuItem>
+              
+              <MenuItem onClick={() => { handleOpenEmailDialog(); handleMenuClose(); }}>
+                <ListItemIcon><SyncIcon fontSize="small" color="primary" /></ListItemIcon>
+                <ListItemText sx={{ fontWeight: "medium" }}>Sync Emails</ListItemText>
+              </MenuItem>
+              
+              <MenuItem onClick={() => { toggleDarkMode(); handleMenuClose(); }}>
+                <ListItemIcon>{darkMode ? <LightModeIcon fontSize="small" /> : <DarkModeIcon fontSize="small" />}</ListItemIcon>
+                <ListItemText>{darkMode ? "Light Mode" : "Dark Mode"}</ListItemText>
+              </MenuItem>
+              
+              <Divider />
+              
+              <MenuItem onClick={() => { localStorage.removeItem("user"); onLogout(); handleMenuClose(); }}>
+                <ListItemIcon><LogoutIcon fontSize="small" color="error" /></ListItemIcon>
+                <ListItemText sx={{ color: "error.main", fontWeight: "bold" }}>Logout</ListItemText>
+              </MenuItem>
+            </Menu>
           </Box>
         </Toolbar>
       </AppBar>
@@ -598,7 +601,6 @@ const Dashboard = ({ user, onLogout }) => {
                       onChange={(e) => setFilterAccount(e.target.value)}
                       sx={{ borderRadius: 2 }}
                     >
-                      <MenuItem value="all"><em>Show All Accounts</em></MenuItem>
                       {savedAccounts.map((acc) => (
                         <MenuItem key={acc.email} value={acc.email}>{acc.email}</MenuItem>
                       ))}
@@ -608,7 +610,7 @@ const Dashboard = ({ user, onLogout }) => {
               </Box>
               
               <Chip 
-                label={filterAccount === "all" ? `${tasks.length} Total` : `${tasks.filter(t => t.syncedByEmail === filterAccount).length} Tasks (${filterAccount})`} 
+                label={`${tasks.filter(t => !t.syncedByEmail || t.syncedByEmail === filterAccount).length} Tasks (${filterAccount || "Manual"})`} 
                 color="primary" 
                 variant="outlined" 
                 sx={{ fontWeight: "bold" }} 
@@ -644,7 +646,7 @@ const Dashboard = ({ user, onLogout }) => {
                             p: 2,
                             height: "100%",
                             minHeight: "500px",
-                            backgroundColor: "#f5f5f5",
+                            bgcolor: "background.paper",
                             borderRadius: "12px",
                             borderTop: `4px solid ${column.color}`,
                           }}
@@ -720,9 +722,35 @@ const Dashboard = ({ user, onLogout }) => {
                                             {task.title}
                                           </Typography>
                                           
-                                          <Typography variant="body2" color="text.secondary" sx={{ mb: 2, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
-                                            {task.description}
-                                          </Typography>
+                                          <Box sx={{ mb: 2 }}>
+                                            {task.description && task.description.includes("- [ ]") ? (
+                                              <Box>
+                                                {task.description.split('\n').map((line, i) => {
+                                                  if (line.trim().startsWith("- [ ]")) {
+                                                    return (
+                                                      <Box key={i} sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
+                                                        <input type="checkbox" onChange={() => {}} style={{marginRight: '8px'}}/>
+                                                        <Typography variant="body2" color="text.secondary">{line.replace("- [ ]", "")}</Typography>
+                                                      </Box>
+                                                    );
+                                                  }
+                                                  if (line.trim().startsWith("- [x]")) {
+                                                    return (
+                                                      <Box key={i} sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
+                                                        <input type="checkbox" checked readOnly style={{marginRight: '8px'}}/>
+                                                        <Typography variant="body2" sx={{textDecoration:'line-through', color: 'text.disabled'}}>{line.replace("- [x]", "")}</Typography>
+                                                      </Box>
+                                                    );
+                                                  }
+                                                  return <Typography key={i} variant="body2" color="text.secondary" sx={{mb: 0.5}}>{line}</Typography>
+                                                })}
+                                              </Box>
+                                            ) : (
+                                              <Typography variant="body2" color="text.secondary" sx={{ display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+                                                {task.description}
+                                              </Typography>
+                                            )}
+                                          </Box>
                                           
                                           <Box sx={{ display: "flex", alignItems: "center", gap: 0.5, mb: 0.5 }}>
                                             <ClockIcon sx={{ fontSize: "0.9rem" }} color="action" />
@@ -731,7 +759,15 @@ const Dashboard = ({ user, onLogout }) => {
                                             </Typography>
                                           </Box>
 
-                                          <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 1 }}>
+                                          <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 1, mt: 1 }}>
+                                            <Tooltip title="Add to Google Calendar">
+                                              <IconButton 
+                                                size="small" 
+                                                onClick={() => window.open(`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(task.title)}&details=${encodeURIComponent(task.description || "")}`, "_blank")}
+                                              >
+                                                <EventIcon fontSize="small" sx={{color: "#4285F4"}} />
+                                              </IconButton>
+                                            </Tooltip>
                                             <IconButton size="small" onClick={() => handleOpenEditPriorityDialog(task)}>
                                               <EditIcon fontSize="small" />
                                             </IconButton>
@@ -1455,88 +1491,61 @@ const Dashboard = ({ user, onLogout }) => {
         onClose={() => setOpenProfileDialog(false)}
         maxWidth="sm"
         fullWidth
+        PaperProps={{ sx: { bgcolor: "background.paper", borderRadius: 3, backgroundImage: "linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.05))" } }}
       >
-        <DialogTitle sx={{ display: "flex", alignItems: "center", gap: "10px", backgroundColor: "#e3f2fd", borderBottom: "2px solid #1565C0" }}>
-          <ProfileIcon sx={{ color: "#1565C0" }} />
-          Your Profile & Credentials
+        <DialogTitle sx={{ display: "flex", alignItems: "center", gap: "10px", borderBottom: "1px solid", borderColor: "divider", bgcolor: "background.default" }}>
+          <ProfileIcon color="primary" />
+          <Typography variant="h6" fontWeight="bold">Your Profile & Credentials</Typography>
         </DialogTitle>
-        <DialogContent sx={{ paddingTop: "20px" }}>
-          {user && (
+        <DialogContent sx={{ paddingTop: "24px" }}>
+          {user && !isEditingProfile && (
             <Box>
               {/* Basic Information */}
-              <Box sx={{ marginBottom: "20px", padding: "15px", backgroundColor: "#f5f5f5", borderRadius: "8px" }}>
-                <Typography variant="h6" sx={{ fontWeight: "bold", marginBottom: "15px", color: "#1565C0" }}>
+              <Box sx={{ p: 2.5, mb: 3, bgcolor: "background.default", borderRadius: 2, border: "1px solid", borderColor: "divider" }}>
+                <Typography variant="subtitle1" fontWeight="bold" color="primary" gutterBottom>
                   👤 Personal Information
                 </Typography>
                 
-                <Box sx={{ display: "flex", alignItems: "center", gap: "15px", marginBottom: "15px" }}>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
                   <Box
                     sx={{
-                      width: "60px",
-                      height: "60px",
-                      borderRadius: "50%",
-                      backgroundColor: "#1565C0",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      color: "white",
-                      fontSize: "28px",
-                      fontWeight: "bold",
+                      width: 60, height: 60, borderRadius: "50%",
+                      bgcolor: "primary.main", display: "flex", alignItems: "center",
+                      justifyContent: "center", color: "white", fontSize: 24, fontWeight: "bold",
                     }}
                   >
                     {user.name.charAt(0).toUpperCase()}
                   </Box>
                   <Box>
-                    <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-                      {user.name}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary">
+                    <Typography variant="h6" fontWeight="bold" color="text.primary">{user.name}</Typography>
+                    <Typography variant="body2" color="text.secondary">
                       {user.role === "STUDENT" ? "👨‍🎓 Student" : "👨‍🏫 Staff/Faculty"}
                     </Typography>
                   </Box>
                 </Box>
-
-                <Typography variant="body2" sx={{ marginBottom: "10px" }}>
-                  <strong>📧 Email:</strong> {user.email}
-                </Typography>
-                <Typography variant="body2">
-                  <strong>🆔 User ID:</strong> {user.id}
-                </Typography>
+                <Typography variant="body2" color="text.primary" sx={{ mb: 0.5 }}><strong>📧 Email:</strong> {user.email}</Typography>
+                <Typography variant="body2" color="text.primary"><strong>🆔 User ID:</strong> {user.id}</Typography>
               </Box>
 
               {/* Student Information */}
               {user.role === "STUDENT" && (
-                <Box sx={{ marginBottom: "20px", padding: "15px", backgroundColor: "#e8f5e9", borderRadius: "8px" }}>
-                  <Typography variant="h6" sx={{ fontWeight: "bold", marginBottom: "15px", color: "#2e7d32" }}>
+                <Box sx={{ p: 2.5, mb: 3, bgcolor: "background.default", borderRadius: 2, border: "1px solid", borderColor: "success.main" }}>
+                  <Typography variant="subtitle1" fontWeight="bold" color="success.main" gutterBottom>
                     📚 Academic Information
                   </Typography>
 
-                  <Box sx={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                    <Box sx={{ padding: "10px", backgroundColor: "white", borderRadius: "6px", borderLeft: "4px solid #4caf50" }}>
-                      <Typography variant="body2" sx={{ color: "#666" }}>
-                        Department
-                      </Typography>
-                      <Typography variant="h6" sx={{ fontWeight: "bold", color: "#2e7d32" }}>
-                        {user.department}
-                      </Typography>
+                  <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
+                    <Box sx={{ p: 1.5, bgcolor: "background.paper", borderRadius: 1, borderLeft: 4, borderColor: "success.main" }}>
+                      <Typography variant="caption" color="text.secondary">Department</Typography>
+                      <Typography variant="body1" fontWeight="bold" color="text.primary">{user.department}</Typography>
                     </Box>
-
-                    <Box sx={{ padding: "10px", backgroundColor: "white", borderRadius: "6px", borderLeft: "4px solid #4caf50" }}>
-                      <Typography variant="body2" sx={{ color: "#666" }}>
-                        Course
-                      </Typography>
-                      <Typography variant="h6" sx={{ fontWeight: "bold", color: "#2e7d32" }}>
-                        {user.course}
-                      </Typography>
+                    <Box sx={{ p: 1.5, bgcolor: "background.paper", borderRadius: 1, borderLeft: 4, borderColor: "success.main" }}>
+                      <Typography variant="caption" color="text.secondary">Course</Typography>
+                      <Typography variant="body1" fontWeight="bold" color="text.primary">{user.course}</Typography>
                     </Box>
-
-                    <Box sx={{ padding: "10px", backgroundColor: "white", borderRadius: "6px", borderLeft: "4px solid #4caf50" }}>
-                      <Typography variant="body2" sx={{ color: "#666" }}>
-                        Year of Study
-                      </Typography>
-                      <Typography variant="h6" sx={{ fontWeight: "bold", color: "#2e7d32" }}>
-                        Year {user.yearOfStudy}
-                      </Typography>
+                    <Box sx={{ p: 1.5, bgcolor: "background.paper", borderRadius: 1, borderLeft: 4, borderColor: "success.main" }}>
+                      <Typography variant="caption" color="text.secondary">Year of Study</Typography>
+                      <Typography variant="body1" fontWeight="bold" color="text.primary">Year {user.yearOfStudy}</Typography>
                     </Box>
                   </Box>
                 </Box>
@@ -1544,51 +1553,37 @@ const Dashboard = ({ user, onLogout }) => {
 
               {/* Staff Information */}
               {user.role === "STAFF" && (
-                <Box sx={{ marginBottom: "20px", padding: "15px", backgroundColor: "#e3f2fd", borderRadius: "8px" }}>
-                  <Typography variant="h6" sx={{ fontWeight: "bold", marginBottom: "15px", color: "#1565c0" }}>
+                <Box sx={{ p: 2.5, mb: 3, bgcolor: "background.default", borderRadius: 2, border: "1px solid", borderColor: "info.main" }}>
+                  <Typography variant="subtitle1" fontWeight="bold" color="info.main" gutterBottom>
                     👔 Staff Information
                   </Typography>
-
-                  <Box sx={{ padding: "10px", backgroundColor: "white", borderRadius: "6px", borderLeft: "4px solid #1565c0" }}>
-                    <Typography variant="body2" sx={{ color: "#666" }}>
-                      Position
-                    </Typography>
-                    <Typography variant="h6" sx={{ fontWeight: "bold", color: "#1565c0" }}>
-                      {user.position}
-                    </Typography>
+                  <Box sx={{ p: 1.5, bgcolor: "background.paper", borderRadius: 1, borderLeft: 4, borderColor: "info.main" }}>
+                    <Typography variant="caption" color="text.secondary">Position</Typography>
+                    <Typography variant="body1" fontWeight="bold" color="text.primary">{user.position}</Typography>
                   </Box>
                 </Box>
               )}
 
               {/* College Information */}
-              <Box sx={{ marginBottom: "20px", padding: "15px", backgroundColor: "#fff3e0", borderRadius: "8px" }}>
-                <Typography variant="h6" sx={{ fontWeight: "bold", marginBottom: "10px", color: "#e65100" }}>
-                  🏫 College Information
+              <Box sx={{ p: 2.5, mb: 3, bgcolor: "background.default", borderRadius: 2, border: "1px solid", borderColor: "warning.main" }}>
+                <Typography variant="subtitle1" fontWeight="bold" color="warning.main" gutterBottom>
+                  🏫 Organization
                 </Typography>
-                <Typography variant="body2">
-                  <strong>College Type:</strong> {user.collegeType || "Main Campus"}
+                <Typography variant="body2" color="text.primary">
+                  <strong>Division:</strong> {user.collegeType || "HQ Campus"}
                 </Typography>
               </Box>
 
               {/* Account Status */}
-              <Alert severity="success" sx={{ marginBottom: "15px" }}>
+              <Alert severity="success" variant="outlined" sx={{ mb: 2 }}>
                 ✅ <strong>Account Status:</strong> Active and Verified
               </Alert>
 
               {/* Quick Actions */}
-              <Box sx={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+              <Box sx={{ display: "flex", gap: 2 }}>
+                <Button fullWidth variant="outlined" onClick={() => { setIsEditingProfile(true); setEditProfileData(user); }}>Edit Profile</Button>
                 <Button
-                  fullWidth
-                  variant="outlined"
-                  sx={{ color: "#1565C0", borderColor: "#1565C0" }}
-                >
-                  📝 Edit Profile
-                </Button>
-                <Button
-                  fullWidth
-                  variant="outlined"
-                  color="error"
-                  startIcon={<LogoutIcon />}
+                  fullWidth variant="contained" color="error" startIcon={<LogoutIcon />}
                   onClick={() => {
                     setOpenProfileDialog(false);
                     localStorage.removeItem("user");
@@ -1600,11 +1595,60 @@ const Dashboard = ({ user, onLogout }) => {
               </Box>
             </Box>
           )}
+          {user && isEditingProfile && editProfileData && (
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 3, pt: 1, '& .MuiOutlinedInput-root': { '& fieldset': { borderColor: 'divider' }, '&:hover fieldset': { borderColor: 'primary.main' } } }}>
+              <Alert severity="info" variant="outlined" sx={{ mb: 1 }}>
+                You can safely update your basic profile credentials here.
+              </Alert>
+              <TextField 
+                label="Full Name" fullWidth variant="outlined"
+                value={editProfileData.name || ""} 
+                onChange={(e) => setEditProfileData({...editProfileData, name: e.target.value})} 
+                sx={{ input: { color: "text.primary" }, label: { color: "text.secondary" } }}
+              />
+              <TextField 
+                label="Email" fullWidth variant="outlined"
+                value={editProfileData.email || ""} 
+                onChange={(e) => setEditProfileData({...editProfileData, email: e.target.value})} 
+                sx={{ input: { color: "text.primary" }, label: { color: "text.secondary" } }}
+              />
+              {user.role === "STUDENT" ? (
+                <>
+                  <TextField 
+                    label="Department" fullWidth variant="outlined"
+                    value={editProfileData.department || ""} 
+                    onChange={(e) => setEditProfileData({...editProfileData, department: e.target.value})} 
+                    sx={{ input: { color: "text.primary" }, label: { color: "text.secondary" } }}
+                  />
+                  <TextField 
+                    label="Course" fullWidth variant="outlined"
+                    value={editProfileData.course || ""} 
+                    onChange={(e) => setEditProfileData({...editProfileData, course: e.target.value})} 
+                    sx={{ input: { color: "text.primary" }, label: { color: "text.secondary" } }}
+                  />
+                </>
+              ) : (
+                <TextField 
+                  label="Position" fullWidth variant="outlined"
+                  value={editProfileData.position || ""} 
+                  onChange={(e) => setEditProfileData({...editProfileData, position: e.target.value})} 
+                  sx={{ input: { color: "text.primary" }, label: { color: "text.secondary" } }}
+                />
+              )}
+              
+              <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
+                <Button fullWidth variant="outlined" color="error" onClick={() => setIsEditingProfile(false)}>Cancel</Button>
+                <Button fullWidth variant="contained" color="success" onClick={() => {
+                  localStorage.setItem("user", JSON.stringify(editProfileData));
+                  setIsEditingProfile(false);
+                  window.location.reload();
+                }}>Save Changes</Button>
+              </Box>
+            </Box>
+          )}
         </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenProfileDialog(false)} variant="contained" color="primary">
-            Close
-          </Button>
+        <DialogActions sx={{ p: 2, borderTop: "1px solid", borderColor: "divider", bgcolor: "background.default" }}>
+          <Button onClick={() => setOpenProfileDialog(false)} variant="contained" color="primary">Close</Button>
         </DialogActions>
       </Dialog>
 
@@ -1636,6 +1680,9 @@ const Dashboard = ({ user, onLogout }) => {
 
       </Container>
       
+      {/* Chatbot Assistant */}
+      <Chatbot tasks={tasks} loadTasks={loadTasks} />
+
       {/* Background Sync Snackbar */}
       <Snackbar 
         open={bgSyncNotify} 

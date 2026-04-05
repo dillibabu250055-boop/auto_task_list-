@@ -156,7 +156,7 @@ const CalendarView = ({ tasks }) => {
                   <>
                     <Typography variant="h6" sx={{ 
                       fontWeight: isToday ? 900 : 600,
-                      color: isToday ? "#1565C0" : "#333",
+                      color: isToday ? "primary.main" : "text.primary",
                       fontSize: "1.2rem",
                       mb: 1
                     }}>
@@ -244,14 +244,14 @@ const CalendarView = ({ tasks }) => {
                         </Typography>
                     </Stack>
                   </Box>
-                  <Typography variant="h6" sx={{ fontWeight: 700, mb: 1, color: "#1a1a1a" }}>{task.title}</Typography>
-                  <Typography variant="body2" color="textSecondary" sx={{ mb: 2, lineHeight: 1.6 }}>
+                  <Typography variant="h6" sx={{ fontWeight: 700, mb: 1, color: "text.primary" }}>{task.title}</Typography>
+                  <Typography variant="body2" sx={{ mb: 2, lineHeight: 1.6, color: "text.secondary", fontWeight: 500 }}>
                     {task.description}
                   </Typography>
                   <Divider sx={{ my: 1.5, borderStyle: "dashed" }} />
                   <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                    <AssignmentIcon sx={{ fontSize: 16, color: "#1565C0" }} />
-                    <Typography variant="caption" sx={{ fontWeight: "bold", color: "#1565C0" }}>
+                    <AssignmentIcon sx={{ fontSize: 16, color: "primary.main" }} />
+                    <Typography variant="caption" sx={{ fontWeight: 800, color: "primary.main" }}>
                         From: {task.senderEmail?.split('<')[0] || 'Internal Task'}
                     </Typography>
                   </Box>

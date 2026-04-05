@@ -60,12 +60,25 @@ public class EmailFetchService {
                 try {
                     Message message = messages[i];
                     String subject = message.getSubject() != null ? message.getSubject() : "(No Subject)";
-                    String content = getTextFromMessage(message);
-                    
-                    if (content == null || content.trim().isEmpty()) continue;
                     
                     Address[] fromAddresses = message.getFrom();
                     String sender = (fromAddresses != null && fromAddresses.length > 0) ? fromAddresses[0].toString() : "Unknown";
+
+                    // PERFORMANCE FIX: Check duplicate from IMAP headers before downloading body
+                    final String checkTitle = subject.trim();
+                    boolean exists = taskRepository.findAll().stream().anyMatch(t -> 
+                        t.getTitle().equals(checkTitle) && 
+                        t.getSenderEmail().equals(sender)
+                    );
+                    
+                    if (exists) {
+                        System.out.println("- Skipping already synced email: " + checkTitle);
+                        continue;
+                    }
+
+                    String content = getTextFromMessage(message);
+                    
+                    if (content == null || content.trim().isEmpty()) continue;
 
                     String emailBody = "Subject: " + subject + "\n\nBody: " + content;
                     Task parsedTask = aiParsingService.parseEmailToTaskFast(emailBody);
@@ -74,19 +87,9 @@ public class EmailFetchService {
                         parsedTask.setSenderEmail(sender);
                         parsedTask.setSyncedByEmail(userEmail);
                         
-                        // Prevent duplicates: Check if task with same title and sender exists
-                        boolean exists = taskRepository.findAll().stream().anyMatch(t -> 
-                            t.getTitle().equals(parsedTask.getTitle()) && 
-                            t.getSenderEmail().equals(sender)
-                        );
-                        
-                        if (!exists) {
-                            Task savedTask = taskRepository.save(parsedTask);
-                            syncedTasks.add(savedTask);
-                            System.out.println("✓ Task created: " + parsedTask.getTitle());
-                        } else {
-                            System.out.println("- Skipping existing task: " + parsedTask.getTitle());
-                        }
+                        Task savedTask = taskRepository.save(parsedTask);
+                        syncedTasks.add(savedTask);
+                        System.out.println("✓ Task created: " + parsedTask.getTitle());
                     }
                 } catch (Exception e) {
                     System.err.println("⚠ Error processing email: " + e.getMessage());
@@ -140,11 +143,22 @@ public class EmailFetchService {
                 try {
                     Message message = allMessages[i];
                     String subject = message.getSubject() != null ? message.getSubject() : "(No Subject)";
-                    String content = getTextFromMessage(message);
-                    if (content == null || content.trim().isEmpty()) continue;
                     
                     Address[] fromAddresses = message.getFrom();
                     String sender = (fromAddresses != null && fromAddresses.length > 0) ? fromAddresses[0].toString() : "Unknown";
+
+                    // PERFORMANCE FIX: Check duplicate from IMAP headers for Background Async too
+                    final String checkTitle = subject.trim();
+                    boolean exists = taskRepository.findAll().stream().anyMatch(t -> 
+                        t.getTitle().equals(checkTitle) && t.getSenderEmail().equals(sender)
+                    );
+                    
+                    if (exists) {
+                        continue;
+                    }
+
+                    String content = getTextFromMessage(message);
+                    if (content == null || content.trim().isEmpty()) continue;
 
                     String emailBody = "Subject: " + subject + "\n\nBody: " + content;
                     Task parsedTask = aiParsingService.parseEmailToTaskFast(emailBody);
@@ -152,17 +166,9 @@ public class EmailFetchService {
                     if (parsedTask != null) {
                         parsedTask.setSenderEmail(sender);
                         parsedTask.setSyncedByEmail(userEmail);
-                        // Prevent duplicates: Check if task with same title and sender exists
-                        final String taskTitle = parsedTask.getTitle();
-                        final String taskSender = sender;
-                        boolean exists = taskRepository.findAll().stream().anyMatch(t -> 
-                            t.getTitle().equals(taskTitle) && t.getSenderEmail().equals(taskSender)
-                        );
                         
-                        if (!exists) {
-                            taskRepository.save(parsedTask);
-                            countSyncing++;
-                        }
+                        taskRepository.save(parsedTask);
+                        countSyncing++;
                         
                         if (countSyncing % 10 == 0 && countSyncing > 0) {
                              System.out.println("... Background Sync Progress: " + countSyncing + " tasks added");

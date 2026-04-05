@@ -326,56 +326,159 @@ const Login = ({ onLoginSuccess }) => {
   };
 
   return (
-    <Box sx={{ minHeight: "100vh", backgroundColor: "#f0f2f5" }}>
-      {/* Header */}
-      <AppBar position="static" sx={{ backgroundColor: "#1565C0", boxShadow: "0 2px 8px rgba(0,0,0,0.1)" }}>
-        <Toolbar>
-          <Box
-            component="img"
-            src="/rit-logo.svg"
-            alt="RIT Logo"
-            sx={{
-              height: "45px",
-              width: "auto",
-              marginRight: "15px",
-              objectFit: "contain",
-            }}
-            onError={(e) => {
-              e.target.style.display = "none";
-            }}
-          />
-          <Box sx={{ display: "flex", flexDirection: "column", flexGrow: 1 }}>
-            <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-              🎓 Rajalakshmi Institute of Technology
-            </Typography>
-            <Typography variant="caption" sx={{ fontSize: "0.75rem", opacity: 0.9 }}>
-              College Task Management System
-            </Typography>
-          </Box>
-        </Toolbar>
-      </AppBar>
-
-      <Container maxWidth="sm" sx={{ paddingY: "40px" }}>
-        <Card
+    <Box sx={{ minHeight: "100vh", bgcolor: "#d1d8e0", display: "flex", justifyContent: "center", alignItems: "center" }}>
+      <Card
+        sx={{
+          display: "flex",
+          width: "900px",
+          height: "600px",
+          borderRadius: "5px",
+          overflow: "hidden",
+          boxShadow: "0 0 100px rgba(0, 123, 255, 0.4)",
+        }}
+      >
+        {/* Left IMS Branding Section */}
+        <Box
           sx={{
-            boxShadow: "0 8px 32px rgba(0,0,0,0.1)",
-            borderRadius: "12px",
-            overflow: "hidden",
+            width: "45%",
+            background: "linear-gradient(160deg, #1a3a6e 0%, #255497 60%, #1e4080 100%)",
+            display: { xs: "none", md: "flex" },
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "32px",
+            position: "relative",
+            "&::after": {
+              content: '""',
+              position: "absolute",
+              right: "-15px",
+              top: 0,
+              bottom: 0,
+              width: "30px",
+              background: "linear-gradient(160deg, #1a3a6e 0%, #255497 60%, #1e4080 100%)",
+              transform: "skewX(-4deg)",
+              zIndex: 1,
+            }
           }}
         >
-          <Box sx={{ backgroundColor: "#1565C0", padding: "30px", textAlign: "center", color: "white" }}>
-            <Typography variant="h4" sx={{ fontWeight: "bold", marginBottom: "10px" }}>
-              Rajalakshmi Institute of Technology
-            </Typography>
-            <Typography variant="body1" sx={{ marginBottom: "10px", fontSize: "1.1rem" }}>
-              Email Task Management System 📧
-            </Typography>
-            <Typography variant="body2">
-              Manage your college tasks and communications efficiently
-            </Typography>
+          {/* College Logo with glowing badge */}
+          <Box
+            sx={{
+              zIndex: 2,
+              mb: 2.5,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "150px",
+              height: "150px",
+              borderRadius: "50%",
+              bgcolor: "white",
+              overflow: "hidden",
+              boxShadow: "0 0 0 4px rgba(255,255,255,0.5), 0 8px 32px rgba(0,0,0,0.4)",
+              p: 1,
+            }}
+          >
+            <Box
+              component="img"
+              src="/rit-logo.png"
+              alt="Rajalakshmi Institute of Technology Logo"
+              sx={{ width: "100%", height: "100%", objectFit: "contain", display: "block" }}
+              onError={(e) => { e.target.style.display = "none"; }}
+            />
           </Box>
 
-          <CardContent sx={{ padding: "40px" }}>
+          {/* Institution Name */}
+          <Typography
+            variant="h6"
+            sx={{
+              fontWeight: 800,
+              textAlign: "center",
+              mb: 0.5,
+              zIndex: 2,
+              letterSpacing: "1px",
+              textTransform: "uppercase",
+              lineHeight: 1.4,
+              color: "#ffffff",
+              textShadow: "0 2px 8px rgba(0,0,0,0.4)",
+            }}
+          >
+            Rajalakshmi Institute
+          </Typography>
+          <Typography
+            variant="h6"
+            sx={{
+              fontWeight: 800,
+              textAlign: "center",
+              mb: 1.5,
+              zIndex: 2,
+              letterSpacing: "1px",
+              textTransform: "uppercase",
+              lineHeight: 1.4,
+              color: "#ffffff",
+              textShadow: "0 2px 8px rgba(0,0,0,0.4)",
+            }}
+          >
+            of Technology
+          </Typography>
+
+          {/* Divider */}
+          <Box sx={{ width: "55px", height: "3px", bgcolor: "rgba(255,255,255,0.7)", borderRadius: "2px", mb: 2, zIndex: 2 }} />
+
+          {/* Subtitle */}
+          <Typography
+            variant="body1"
+            sx={{
+              textAlign: "center",
+              lineHeight: 1.7,
+              zIndex: 2,
+              color: "#ffffff",
+              fontWeight: 700,
+              letterSpacing: "0.5px",
+              textShadow: "0 1px 6px rgba(0,0,0,0.5)",
+            }}
+          >
+            Intelligent Workflow Organizer
+          </Typography>
+
+          {/* Badge */}
+          <Box
+            sx={{
+              mt: 2,
+              zIndex: 2,
+              bgcolor: "rgba(255,255,255,0.25)",
+              border: "1.5px solid rgba(255,255,255,0.7)",
+              borderRadius: "20px",
+              px: 2.5,
+              py: 0.6,
+            }}
+          >
+            <Typography
+              variant="caption"
+              sx={{
+                letterSpacing: "2.5px",
+                fontWeight: 800,
+                textTransform: "uppercase",
+                color: "#ffffff",
+                fontSize: "0.72rem",
+              }}
+            >
+              AUTO TASK MANAGER
+            </Typography>
+          </Box>
+        </Box>
+
+        {/* Right Form Section */}
+        <Box
+          sx={{
+            width: { xs: "100%", md: "55%" },
+            bgcolor: "#ffffff",
+            position: "relative",
+            zIndex: 2,
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <CardContent sx={{ padding: "40px 50px", flexGrow: 1, overflowY: "auto" }}>
             {/* Message Alert */}
             {message && (
               <Alert
@@ -395,13 +498,14 @@ const Login = ({ onLoginSuccess }) => {
               onChange={(e, newValue) => setActiveTab(newValue)}
               sx={{
                 marginBottom: "30px",
-                borderBottom: "2px solid #e0e0e0",
+                borderBottom: "2px solid #ddd",
                 "& .MuiTab-root": {
                   fontSize: "1rem",
                   fontWeight: "bold",
+                  color: "#555",
                 },
                 "& .Mui-selected": {
-                  color: "#1565C0",
+                  color: "#007bff !important",
                 },
               }}
             >
@@ -412,7 +516,7 @@ const Login = ({ onLoginSuccess }) => {
             {/* LOGIN TAB */}
             {activeTab === 0 && (
               <Box component="form" onSubmit={handleLogin}>
-                <Typography variant="h6" sx={{ marginBottom: "20px", fontWeight: "bold" }}>
+                <Typography variant="h5" sx={{ marginBottom: "25px", fontWeight: "bold", color: "#111" }}>
                   Sign In to Your Account
                 </Typography>
 
@@ -428,9 +532,10 @@ const Login = ({ onLoginSuccess }) => {
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <EmailIcon sx={{ color: "#1565C0" }} />
+                        <EmailIcon sx={{ color: "primary.main" }} />
                       </InputAdornment>
                     ),
+                    sx: { color: "#1a1a2e", fontWeight: 500 }
                   }}
                   variant="outlined"
                 />
@@ -446,7 +551,7 @@ const Login = ({ onLoginSuccess }) => {
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <LockIcon sx={{ color: "#1565C0" }} />
+                        <LockIcon sx={{ color: "primary.main" }} />
                       </InputAdornment>
                     ),
                     endAdornment: (
@@ -455,12 +560,13 @@ const Login = ({ onLoginSuccess }) => {
                           size="small"
                           onClick={() => setShowPassword(!showPassword)}
                           edge="end"
-                          sx={{ color: "#1565C0" }}
+                          sx={{ color: "primary.main" }}
                         >
                           {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
                         </Button>
                       </InputAdornment>
                     ),
+                    sx: { color: "#1a1a2e", fontWeight: 500 }
                   }}
                   variant="outlined"
                 />
@@ -469,7 +575,7 @@ const Login = ({ onLoginSuccess }) => {
                   <Button
                     size="small"
                     onClick={() => setView("FORGOT")}
-                    sx={{ color: "#1565C0", textTransform: "none", fontWeight: "bold" }}
+                    sx={{ color: "primary.main", textTransform: "none", fontWeight: "bold" }}
                   >
                     Forgot Password?
                   </Button>
@@ -478,16 +584,23 @@ const Login = ({ onLoginSuccess }) => {
                 <Button
                   fullWidth
                   variant="contained"
-                  color="primary"
                   size="large"
                   sx={{
                     marginTop: "25px",
                     padding: "12px",
                     fontSize: "1rem",
                     fontWeight: "bold",
-                    backgroundColor: "#1565C0",
+                    borderRadius: "6px",
+                    bgcolor: "#007bff",
+                    color: "#ffffff",
+                    boxShadow: "0 4px 12px rgba(0,123,255,0.35)",
                     "&:hover": {
-                      backgroundColor: "#0d47a1",
+                      bgcolor: "#0069d9",
+                    },
+                    "&.Mui-disabled": {
+                      bgcolor: "#2575fc",
+                      color: "#ffffff",
+                      opacity: 0.8,
                     },
                   }}
                   onClick={handleLogin}
@@ -498,8 +611,8 @@ const Login = ({ onLoginSuccess }) => {
                 </Button>
 
                 <Box sx={{ position: "relative", marginY: "25px", textAlign: "center" }}>
-                  <Box sx={{ position: "absolute", top: "50%", left: 0, right: 0, height: "1px", backgroundColor: "#e0e0e0", zIndex: 0 }} />
-                  <Typography variant="body2" sx={{ position: "relative", display: "inline-block", padding: "0 15px", backgroundColor: "white", color: "#888", zIndex: 1 }}>
+                  <Box sx={{ position: "absolute", top: "50%", left: 0, right: 0, height: "1px", backgroundColor: "#ccc", zIndex: 0 }} />
+                  <Typography variant="body2" sx={{ position: "relative", display: "inline-block", padding: "0 15px", backgroundColor: "white", color: "#333", fontWeight: "bold", zIndex: 1 }}>
                     OR
                   </Typography>
                 </Box>
@@ -513,28 +626,28 @@ const Login = ({ onLoginSuccess }) => {
                   sx={{
                     padding: "10px",
                     fontWeight: "bold",
-                    color: "#757575",
-                    borderColor: "#ddd",
+                    color: "#333",
+                    borderColor: "#333",
                     textTransform: "none",
                     fontSize: "1rem",
                     "&:hover": {
-                      backgroundColor: "#f5f5f5",
-                      borderColor: "#ccc",
+                      backgroundColor: "#f0f0f0",
+                      borderColor: "#111",
                     },
                   }}
-                  startIcon={<Box component="img" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" sx={{ width: 22, height: 22 }} />}
+                  startIcon={<Box component="img" src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" sx={{ width: 22, height: 22 }} />}
                 >
                   Sign in with Google
                 </Button>
 
 
 
-                <Typography variant="body2" sx={{ marginTop: "15px", textAlign: "center", color: "#666" }}>
+                <Typography variant="body2" sx={{ marginTop: "15px", textAlign: "center", color: "#333" }}>
                   Don't have an account?{" "}
                   <Button
                     size="small"
                     onClick={() => setActiveTab(1)}
-                    sx={{ color: "#1565C0", fontWeight: "bold" }}
+                    sx={{ color: "#007bff", fontWeight: "bold" }}
                   >
                     Register here
                   </Button>
@@ -560,9 +673,10 @@ const Login = ({ onLoginSuccess }) => {
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <PersonIcon sx={{ color: "#1565C0" }} />
+                        <PersonIcon sx={{ color: "primary.main" }} />
                       </InputAdornment>
                     ),
+                    sx: { color: "#1a1a2e", fontWeight: 500 }
                   }}
                   variant="outlined"
                 />
@@ -576,6 +690,9 @@ const Login = ({ onLoginSuccess }) => {
                   onChange={(e) => setRegisterData({ ...registerData, phoneNumber: e.target.value })}
                   margin="normal"
                   disabled={loading}
+                  InputProps={{
+                    sx: { color: "#1a1a2e", fontWeight: 500 }
+                  }}
                   variant="outlined"
                 />
 
@@ -592,9 +709,10 @@ const Login = ({ onLoginSuccess }) => {
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <EmailIcon sx={{ color: "#1565C0" }} />
+                        <EmailIcon sx={{ color: "primary.main" }} />
                       </InputAdornment>
                     ),
+                    sx: { color: "#1a1a2e", fontWeight: 500 }
                   }}
                   variant="outlined"
                 />
@@ -615,8 +733,8 @@ const Login = ({ onLoginSuccess }) => {
 
                 {/* Student Fields */}
                 {registerData.role === "STUDENT" && (
-                  <Box sx={{ marginTop: "15px", padding: "15px", backgroundColor: "#e8f5e9", borderRadius: "8px" }}>
-                    <Typography variant="body2" sx={{ fontWeight: "bold", marginBottom: "15px", color: "#2e7d32" }}>
+                  <Box sx={{ marginTop: "15px", padding: "15px", bgcolor: "background.default", border: "1px solid", borderColor: "success.main", borderRadius: "8px" }}>
+                    <Typography variant="body2" sx={{ fontWeight: "bold", marginBottom: "15px", color: "success.main" }}>
                       📚 Student Information
                     </Typography>
 
@@ -630,6 +748,9 @@ const Login = ({ onLoginSuccess }) => {
                       disabled={loading}
                       helperText={`Register number must be exactly 13 characters (${registerData.registerNumber.length}/13)`}
                       error={registerData.registerNumber.length > 0 && registerData.registerNumber.length !== 13}
+                      InputProps={{
+                        sx: { color: "#1a1a2e", fontWeight: 500 }
+                      }}
                       variant="outlined"
                     />
 
@@ -687,8 +808,8 @@ const Login = ({ onLoginSuccess }) => {
 
                 {/* Staff Fields */}
                 {registerData.role === "STAFF" && (
-                  <Box sx={{ marginTop: "15px", padding: "15px", backgroundColor: "#e3f2fd", borderRadius: "8px" }}>
-                    <Typography variant="body2" sx={{ fontWeight: "bold", marginBottom: "15px", color: "#1565c0" }}>
+                  <Box sx={{ marginTop: "15px", padding: "15px", bgcolor: "background.default", border: "1px solid", borderColor: "info.main", borderRadius: "8px" }}>
+                    <Typography variant="body2" sx={{ fontWeight: "bold", marginBottom: "15px", color: "info.main" }}>
                       👔 Staff Information
                     </Typography>
 
@@ -722,7 +843,7 @@ const Login = ({ onLoginSuccess }) => {
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <LockIcon sx={{ color: "#1565C0" }} />
+                        <LockIcon sx={{ color: "primary.main" }} />
                       </InputAdornment>
                     ),
                     endAdornment: (
@@ -731,12 +852,13 @@ const Login = ({ onLoginSuccess }) => {
                           size="small"
                           onClick={() => setShowPassword(!showPassword)}
                           edge="end"
-                          sx={{ color: "#1565C0" }}
+                          sx={{ color: "primary.main" }}
                         >
                           {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
                         </Button>
                       </InputAdornment>
                     ),
+                    sx: { color: "#1a1a2e", fontWeight: 500 }
                   }}
                   variant="outlined"
                 />
@@ -760,7 +882,7 @@ const Login = ({ onLoginSuccess }) => {
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <LockIcon sx={{ color: "#1565C0" }} />
+                        <LockIcon sx={{ color: "primary.main" }} />
                       </InputAdornment>
                     ),
                   }}
@@ -768,8 +890,8 @@ const Login = ({ onLoginSuccess }) => {
                 />
 
                 {/* Google Integration Section */}
-                <Box sx={{ marginTop: "20px", padding: "20px", textAlign: "center", backgroundColor: "#f8f9fa", borderRadius: "12px", border: "1px dashed #ced4da" }}>
-                  <Typography variant="body2" sx={{ fontWeight: "bold", marginBottom: "15px", color: "#5f6368" }}>
+                <Box sx={{ marginTop: "20px", padding: "20px", textAlign: "center", bgcolor: "background.default", borderRadius: "12px", border: "1px dashed", borderColor: "divider" }}>
+                  <Typography variant="body2" sx={{ fontWeight: "bold", marginBottom: "15px", color: "text.primary" }}>
                     🚀 Quick Registration with Google
                   </Typography>
                   <Button
@@ -777,22 +899,22 @@ const Login = ({ onLoginSuccess }) => {
                     onClick={() => googleLogin()}
                     disabled={loading}
                     sx={{
-                      backgroundColor: "white",
-                      color: "#3c4043",
-                      borderColor: "#dadce0",
+                      bgcolor: "background.paper",
+                      color: "text.primary",
+                      borderColor: "divider",
                       textTransform: "none",
                       fontWeight: "500",
                       padding: "8px 16px",
                       "&:hover": {
-                        backgroundColor: "#f7f8f8",
-                        borderColor: "#d2d4d7"
+                        bgcolor: "action.hover",
+                        borderColor: "text.secondary"
                       }
                     }}
                     startIcon={<Box component="img" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" sx={{ width: 20, height: 20 }} />}
                   >
                     Link Google Account for Email Sync
                   </Button>
-                  <Typography variant="caption" sx={{ display: "block", marginTop: "10px", color: "#70757a" }}>
+                  <Typography variant="caption" sx={{ display: "block", marginTop: "10px", color: "text.secondary" }}>
                     Required for converting Gmail emails into tasks automatically.
                   </Typography>
                 </Box>
@@ -807,9 +929,11 @@ const Login = ({ onLoginSuccess }) => {
                     padding: "12px",
                     fontSize: "1rem",
                     fontWeight: "bold",
-                    backgroundColor: "#1565C0",
+                    bgcolor: "#007bff",
+                    color: "white",
+                    borderRadius: "0px",
                     "&:hover": {
-                      backgroundColor: "#0d47a1",
+                      backgroundColor: "#0069d9",
                     },
                   }}
                   onClick={handleRegister}
@@ -830,7 +954,7 @@ const Login = ({ onLoginSuccess }) => {
                   <Button
                     size="small"
                     onClick={() => setActiveTab(0)}
-                    sx={{ color: "#1565C0", fontWeight: "bold" }}
+                    sx={{ color: "primary.main", fontWeight: "bold" }}
                   >
                     Login here
                   </Button>
@@ -861,7 +985,7 @@ const Login = ({ onLoginSuccess }) => {
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <EmailIcon sx={{ color: "#1565C0" }} />
+                        <EmailIcon sx={{ color: "primary.main" }} />
                       </InputAdornment>
                     ),
                   }}
@@ -951,13 +1075,8 @@ const Login = ({ onLoginSuccess }) => {
               </Box>
             )}
           </CardContent>
-        </Card>
-
-        {/* Footer */}
-        <Typography variant="body2" sx={{ textAlign: "center", marginTop: "30px", color: "#999" }}>
-          💡 This is an official college platform. Only use your college email ID.
-        </Typography>
-      </Container>
+        </Box>
+      </Card>
     </Box>
   );
 };

@@ -1,52 +1,60 @@
 import React, { useState, useEffect } from "react";
 import Dashboard from "./components/Dashboard";
 import Login from "./components/Login";
+import { ThemeProvider, createTheme, CssBaseline } from "@mui/material";
 
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
-    // Check if user is already logged in
     const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
+    if (storedUser) setUser(JSON.parse(storedUser));
+    const storedTheme = localStorage.getItem("darkMode");
+    if (storedTheme === "true") setDarkMode(true);
     setLoading(false);
   }, []);
 
-  const handleLoginSuccess = (userData) => {
-    setUser(userData);
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+    localStorage.setItem("darkMode", !darkMode);
   };
 
-  const handleLogout = () => {
-    setUser(null);
-  };
+  const theme = createTheme({
+    palette: {
+      mode: darkMode ? "dark" : "light",
+      primary: { main: darkMode ? "#60a5fa" : "#1565C0" }, // a nice light blue in dark mode
+      secondary: { main: "#ff9800" },
+      background: {
+        default: darkMode ? "#0B1120" : "#f0f2f5", // sleek midnight blue
+        paper: darkMode ? "#111827" : "#ffffff", // tailwind gray-900
+      }
+    },
+    components: {
+      MuiPaper: {
+        styleOverrides: {
+          root: {
+            backgroundImage: "none", // Avoid default MUI dark mode elevation blending
+          }
+        }
+      }
+    }
+  });
 
-  if (loading) {
-    return (
-      <div style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        minHeight: "100vh",
-        fontFamily: "Arial, sans-serif",
-        fontSize: "18px",
-        color: "#1565C0"
-      }}>
-        Loading...
-      </div>
-    );
-  }
+  if (loading) return <div>Loading...</div>;
 
   return (
-    <div style={{ fontFamily: "Arial, sans-serif", minHeight: "100vh", backgroundColor: "#f5f5f5" }}>
-      {!user ? (
-        <Login onLoginSuccess={handleLoginSuccess} />
-      ) : (
-        <Dashboard user={user} onLogout={handleLogout} />
-      )}
-    </div>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <div style={{ fontFamily: "Inter, Arial, sans-serif", minHeight: "100vh" }}>
+        {!user ? (
+          <Login onLoginSuccess={setUser} />
+        ) : (
+          <Dashboard user={user} onLogout={() => setUser(null)} darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+        )}
+      </div>
+    </ThemeProvider>
   );
 }
 
