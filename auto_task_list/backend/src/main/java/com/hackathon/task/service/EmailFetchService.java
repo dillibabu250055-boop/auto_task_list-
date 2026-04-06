@@ -18,7 +18,7 @@ public class EmailFetchService {
     @Autowired
     private AiParsingService aiParsingService;
 
-    private static final int MAX_EMAILS_TO_SYNC = 50;  // Fetch up to 50 recent emails for better coverage
+    private static final int MAX_EMAILS_TO_SYNC = 100;  // Fetch up to 100 recent emails for better coverage
     private static final int TIMEOUT_MS = 30000;  // 30 second timeout for Gmail IMAP
 
     public List<Task> fetchAndParseEmails(String userEmail, String appPassword) {
@@ -64,35 +64,45 @@ public class EmailFetchService {
                     Address[] fromAddresses = message.getFrom();
                     String sender = (fromAddresses != null && fromAddresses.length > 0) ? fromAddresses[0].toString() : "Unknown";
 
-                    // PERFORMANCE FIX: Check duplicate from IMAP headers before downloading body
-                    final String checkTitle = subject.trim();
-                    boolean exists = taskRepository.findAll().stream().anyMatch(t -> 
-                        t.getTitle().equals(checkTitle) && 
-                        t.getSenderEmail().equals(sender)
-                    );
+                    // UID/Message-ID check for precise duplicate detection
+                    String[] mIds = message.getHeader("Message-ID");
+                    String messageId = (mIds != null && mIds.length > 0) ? mIds[0] : subject + message.getSentDate().getTime();
                     
-                    if (exists) {
-                        System.out.println("- Skipping already synced email: " + checkTitle);
+                    if (taskRepository.existsByMessageIdAndSyncedByEmail(messageId, userEmail)) {
+                        System.out.println("- Skipping already synced email (ID: " + messageId + ")");
                         continue;
                     }
 
                     String content = getTextFromMessage(message);
                     
-                    if (content == null || content.trim().isEmpty()) continue;
+                    if (content == null || content.trim().isEmpty()) {
+                        System.out.println("- Skipping empty email: " + subject);
+                        continue;
+                    }
 
+                    System.out.println("Processing email: [" + subject + "] from [" + sender + "]");
                     String emailBody = "Subject: " + subject + "\n\nBody: " + content;
                     Task parsedTask = aiParsingService.parseEmailToTaskFast(emailBody);
 
-                    if (parsedTask != null) {
+                        if (parsedTask != null) {
                         parsedTask.setSenderEmail(sender);
                         parsedTask.setSyncedByEmail(userEmail);
+                        parsedTask.setMessageId(messageId);
+                        
+                        // Extract received date
+                        Date receivedDate = message.getReceivedDate() != null ? message.getReceivedDate() : message.getSentDate();
+                        if (receivedDate != null) {
+                            parsedTask.setReceivedDate(receivedDate.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDateTime());
+                        }
                         
                         Task savedTask = taskRepository.save(parsedTask);
                         syncedTasks.add(savedTask);
-                        System.out.println("✓ Task created: " + parsedTask.getTitle());
+                        System.out.println("✓ Task created: " + parsedTask.getTitle() + " (Priority: " + parsedTask.getPriority() + ")");
+                    } else {
+                        System.out.println("- No tasks found in email: " + subject);
                     }
                 } catch (Exception e) {
-                    System.err.println("⚠ Error processing email: " + e.getMessage());
+                    System.err.println("⚠ Error processing email index " + i + ": " + e.getMessage());
                 }
             }
 
@@ -147,13 +157,11 @@ public class EmailFetchService {
                     Address[] fromAddresses = message.getFrom();
                     String sender = (fromAddresses != null && fromAddresses.length > 0) ? fromAddresses[0].toString() : "Unknown";
 
-                    // PERFORMANCE FIX: Check duplicate from IMAP headers for Background Async too
-                    final String checkTitle = subject.trim();
-                    boolean exists = taskRepository.findAll().stream().anyMatch(t -> 
-                        t.getTitle().equals(checkTitle) && t.getSenderEmail().equals(sender)
-                    );
+                    // UID/Message-ID check for precise duplicate detection (Async)
+                    String[] mIds = message.getHeader("Message-ID");
+                    String messageId = (mIds != null && mIds.length > 0) ? mIds[0] : subject + message.getSentDate().getTime();
                     
-                    if (exists) {
+                    if (taskRepository.existsByMessageIdAndSyncedByEmail(messageId, userEmail)) {
                         continue;
                     }
 
@@ -163,9 +171,15 @@ public class EmailFetchService {
                     String emailBody = "Subject: " + subject + "\n\nBody: " + content;
                     Task parsedTask = aiParsingService.parseEmailToTaskFast(emailBody);
 
-                    if (parsedTask != null) {
+                        if (parsedTask != null) {
                         parsedTask.setSenderEmail(sender);
                         parsedTask.setSyncedByEmail(userEmail);
+                        parsedTask.setMessageId(messageId);
+                        
+                        Date receivedDate = message.getReceivedDate() != null ? message.getReceivedDate() : message.getSentDate();
+                        if (receivedDate != null) {
+                            parsedTask.setReceivedDate(receivedDate.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDateTime());
+                        }
                         
                         taskRepository.save(parsedTask);
                         countSyncing++;

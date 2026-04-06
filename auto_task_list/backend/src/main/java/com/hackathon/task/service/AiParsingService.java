@@ -54,12 +54,14 @@ public class AiParsingService {
             "1. 'description' must be exactly 3 bullet points (•).\n" +
             "2. 'deadline' must be YYYY-MM-DDTHH:mm:ss based on text. If no year, assume 2026.\n" +
             "3. 'priority' must be HIGH, MEDIUM, or LOW.\n" +
+            "4. 'category' must be ACADEMIC, ADMINISTRATIVE, EXTRACURRICULAR, or GENERAL.\n" +
             "Return JSON:\n" +
             "{\n" +
             "  \"title\": \"title\",\n" +
             "  \"description\": \"• p1\\n• p2\\n• p3\",\n" +
             "  \"deadline\": \"ISO_DATE\",\n" +
             "  \"priority\": \"HIGH|MEDIUM|LOW\",\n" +
+            "  \"category\": \"ACADEMIC|ADMINISTRATIVE|EXTRACURRICULAR|GENERAL\",\n" +
             "  \"status\": \"PENDING\"\n" +
             "}",
             emailBody);
@@ -92,6 +94,14 @@ public class AiParsingService {
             
             String p = taskJson.get("priority").asText("MEDIUM").toUpperCase();
             task.setPriority(Task.Priority.valueOf(p));
+            
+            try {
+                String c = taskJson.get("category").asText("GENERAL").toUpperCase();
+                task.setCategory(Task.Category.valueOf(c));
+            } catch (Exception e) {
+                task.setCategory(Task.Category.GENERAL);
+            }
+            
             task.setStatus(Task.Status.PENDING);
             return task;
         }
@@ -142,6 +152,17 @@ public class AiParsingService {
         if (desc.contains("Body:")) desc = desc.substring(desc.indexOf("Body:") + 5).trim();
         task.setDescription(desc.substring(0, Math.min(1000, desc.length())));
         task.setStatus(Task.Status.PENDING);
+
+        // 5. Category Detection
+        if (lowerBody.contains("course") || lowerBody.contains("assignment") || lowerBody.contains("exam") || lowerBody.contains("homework") || lowerBody.contains("class") || lowerBody.contains("professor")) {
+            task.setCategory(Task.Category.ACADEMIC);
+        } else if (lowerBody.contains("club") || lowerBody.contains("event") || lowerBody.contains("hackathon") || lowerBody.contains("sports")) {
+            task.setCategory(Task.Category.EXTRACURRICULAR);
+        } else if (lowerBody.contains("registration") || lowerBody.contains("fee") || lowerBody.contains("document") || lowerBody.contains("form")) {
+            task.setCategory(Task.Category.ADMINISTRATIVE);
+        } else {
+            task.setCategory(Task.Category.GENERAL);
+        }
 
         return task;
     }

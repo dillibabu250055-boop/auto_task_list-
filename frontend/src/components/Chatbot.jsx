@@ -108,6 +108,14 @@ const Chatbot = ({ tasks, loadTasks }) => {
                 setMessages(prev => [...prev, { sender: "bot", text: "✅ No high priority tasks right now!" }]);
             }
         }
+        else if (lowerInput.includes("academic") || lowerInput.includes("class") || lowerInput.includes("course")) {
+            const academic = tasks.filter(t => t.category === "ACADEMIC" && t.status !== "COMPLETED");
+            if (academic.length > 0) {
+                setMessages(prev => [...prev, { sender: "bot", text: `📚 You have ${academic.length} pending academic tasks. Latest: "${academic[0].title}"` }]);
+            } else {
+                setMessages(prev => [...prev, { sender: "bot", text: "No academic tasks pending! Time to relax? 😎" }]);
+            }
+        }
         else {
             const pendingNames = tasks.filter(t => t.status !== "COMPLETED").map(t => t.title).slice(0, 3);
             if (pendingNames.length > 0) {

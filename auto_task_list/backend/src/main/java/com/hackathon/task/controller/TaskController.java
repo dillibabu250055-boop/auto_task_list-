@@ -44,6 +44,8 @@ public class TaskController {
                     task.setPriority(updatedTask.getPriority());
                     task.setStatus(updatedTask.getStatus());
                     task.setSenderEmail(updatedTask.getSenderEmail());
+                    task.setSyncedByEmail(updatedTask.getSyncedByEmail());
+                    task.setCategory(updatedTask.getCategory());
                     return taskRepository.save(task);
                 }).orElseThrow(() -> new RuntimeException("Task not found"));
     }

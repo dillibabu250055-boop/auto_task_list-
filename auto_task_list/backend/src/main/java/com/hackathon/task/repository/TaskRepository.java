@@ -10,4 +10,6 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     
     @Transactional
     void deleteBySyncedByEmail(String syncedByEmail);
+
+    boolean existsByMessageIdAndSyncedByEmail(String messageId, String syncedByEmail);
 }

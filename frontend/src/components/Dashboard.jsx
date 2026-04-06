@@ -33,7 +33,9 @@ import {
   InputLabel,
   Snackbar,
   Tooltip,
+  Checkbox,
 } from "@mui/material";
+import ConfettiExplosion from 'react-confetti-explosion';
 import EmailIcon from "@mui/icons-material/Email";
 import SyncIcon from "@mui/icons-material/Sync";
 import RefreshIcon from "@mui/icons-material/Refresh";
@@ -61,6 +63,9 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Menu from "@mui/material/Menu";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
+import LinearProgress from "@mui/material/LinearProgress";
+import ShowChartIcon from "@mui/icons-material/ShowChart";
+import PieChartIcon from "@mui/icons-material/PieChart";
 
 const Dashboard = ({ user, onLogout, darkMode, toggleDarkMode }) => {
   const [tasks, setTasks] = useState([]);
@@ -88,11 +93,37 @@ const Dashboard = ({ user, onLogout, darkMode, toggleDarkMode }) => {
   const [syncSuccess, setSyncSuccess] = useState(false);
   const [syncProgress, setSyncProgress] = useState("Initializing...");
   const [isSyncing, setIsSyncing] = useState(false);
+  const [isExploding, setIsExploding] = useState(false);
+  const [undoTask, setUndoTask] = useState(null);
   
   // New state for task management
   const [openEditPriorityDialog, setOpenEditPriorityDialog] = useState(false);
   const [editingTaskId, setEditingTaskId] = useState(null);
   const [editingPriority, setEditingPriority] = useState("");
+
+  // Auto-Email Reply state
+  const [openReplyDialog, setOpenReplyDialog] = useState(false);
+  const [replyTask, setReplyTask] = useState(null);
+
+  // Focus Mode state
+  const [focusTask, setFocusTask] = useState(null);
+  const [focusTimeLeft, setFocusTimeLeft] = useState(25 * 60);
+  const [isFocusActive, setIsFocusActive] = useState(false);
+
+  useEffect(() => {
+    let interval = null;
+    if (isFocusActive && focusTimeLeft > 0) {
+      interval = setInterval(() => setFocusTimeLeft(t => t - 1), 1000);
+    } else if (focusTimeLeft === 0) {
+      setIsFocusActive(false);
+      setNotificationMessage("🍅 Pomodoro session complete!");
+      setShowNotification(true);
+      // Play sound if possible
+    }
+    return () => clearInterval(interval);
+  }, [isFocusActive, focusTimeLeft]);
+  
+  const formatTime = (sec) => `${Math.floor(sec / 60).toString().padStart(2, '0')}:${(sec % 60).toString().padStart(2, '0')}`;
   const [updatingTaskId, setUpdatingTaskId] = useState(null);
   const [deadlineNotifications, setDeadlineNotifications] = useState([]);
   const [showNotification, setShowNotification] = useState(false);
@@ -126,12 +157,12 @@ const Dashboard = ({ user, onLogout, darkMode, toggleDarkMode }) => {
       // Auto-fill first saved account email
       const accounts = JSON.parse(saved);
       if (accounts.length > 0) {
-        setEmailCredentials({
-          email: accounts[0].email,
-          appPassword: "",
-        });
         setFilterAccount(accounts[0].email);
+      } else {
+        setFilterAccount("all-manual");
       }
+    } else {
+      setFilterAccount("all-manual");
     }
   };
 
@@ -303,12 +334,67 @@ const Dashboard = ({ user, onLogout, darkMode, toggleDarkMode }) => {
 
   const getTasksByStatus = (status) => {
     let filteredTasks = tasks.filter(task => task.status === status);
-    if (filterAccount) {
-      filteredTasks = filteredTasks.filter(task => 
-        !task.syncedByEmail || task.syncedByEmail === filterAccount
-      );
+    
+    if (filterAccount === "all-manual") {
+       // Only show tasks that are NOT synced by any email (manually created)
+       return filteredTasks.filter(task => !task.syncedByEmail);
+    } else if (filterAccount === "all-synced") {
+       // Show all synced tasks from any account
+       return filteredTasks.filter(task => !!task.syncedByEmail);
+    } else if (filterAccount && filterAccount !== "show-all") {
+       // Filter by specific account
+       return filteredTasks.filter(task => task.syncedByEmail === filterAccount || (!task.syncedByEmail && filterAccount === "all-manual"));
     }
+    
     return filteredTasks;
+  };
+
+  const handleToggleTaskCompletion = async (task) => {
+    const newStatus = task.status === "COMPLETED" ? "PENDING" : "COMPLETED";
+    const updatedTasks = tasks.map(t => t.id === task.id ? { ...t, status: newStatus } : t);
+    setTasks(updatedTasks);
+
+    if (newStatus === "COMPLETED") {
+      setIsExploding(true);
+      setTimeout(() => setIsExploding(false), 2500);
+      setUndoTask(task);
+      if (task.senderEmail && !task.senderEmail.includes("noreply")) {
+         setReplyTask(task);
+         setOpenReplyDialog(true);
+      }
+    } else {
+      setUndoTask(null);
+    }
+
+    try {
+      const updatedTask = { ...task, status: newStatus };
+      await axios.put(`http://localhost:8080/api/tasks/${task.id}`, updatedTask);
+      setNotificationMessage(`✅ Task marked as ${newStatus.toLowerCase()}`);
+      setShowNotification(true);
+      checkDeadlineNotifications();
+    } catch (error) {
+      console.error("Error updating task status:", error);
+      loadTasks();
+      setNotificationMessage("❌ Failed to update task");
+      setShowNotification(true);
+    }
+  };
+
+  const handleUndoComplete = async () => {
+    if (!undoTask) return;
+    const revertedStatus = "PENDING";
+    const updatedTasks = tasks.map(t => t.id === undoTask.id ? { ...t, status: revertedStatus } : t);
+    setTasks(updatedTasks);
+    setShowNotification(false);
+
+    try {
+      const updatedTask = { ...undoTask, status: revertedStatus };
+      await axios.put(`http://localhost:8080/api/tasks/${undoTask.id}`, updatedTask);
+    } catch (error) {
+      loadTasks();
+    } finally {
+      setUndoTask(null);
+    }
   };
 
   // Open priority edit dialog
@@ -579,6 +665,7 @@ const Dashboard = ({ user, onLogout, darkMode, toggleDarkMode }) => {
           >
             <Tab icon={<TaskAltIcon />} iconPosition="start" label="Task List" sx={{ fontSize: "1rem", fontWeight: "bold", minWidth: 200 }} />
             <Tab icon={<CalendarMonthIcon />} iconPosition="start" label="Upcoming Events (Calendar)" sx={{ fontSize: "1rem", fontWeight: "bold", minWidth: 250 }} />
+            <Tab icon={<ShowChartIcon />} iconPosition="start" label="Analytics" sx={{ fontSize: "1rem", fontWeight: "bold", minWidth: 200 }} />
           </Tabs>
         </Paper>
 
@@ -587,7 +674,7 @@ const Dashboard = ({ user, onLogout, darkMode, toggleDarkMode }) => {
           <>
             <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3, flexWrap: "wrap", gap: 2 }}>
               <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                <Typography variant="h4" sx={{ fontWeight: "bold", color: "#1565C0" }}>
+                <Typography variant="h4" sx={{ fontWeight: "bold", color: "primary.main" }}>
                   My Tasks
                 </Typography>
                 
@@ -601,8 +688,12 @@ const Dashboard = ({ user, onLogout, darkMode, toggleDarkMode }) => {
                       onChange={(e) => setFilterAccount(e.target.value)}
                       sx={{ borderRadius: 2 }}
                     >
+                      <MenuItem value="show-all">🌍 Show All Tasks</MenuItem>
+                      <MenuItem value="all-manual">📝 Manual Tasks Only</MenuItem>
+                      <MenuItem value="all-synced">📧 All Synced Accounts</MenuItem>
+                      <Divider />
                       {savedAccounts.map((acc) => (
-                        <MenuItem key={acc.email} value={acc.email}>{acc.email}</MenuItem>
+                        <MenuItem key={acc.email} value={acc.email}>👤 {acc.email}</MenuItem>
                       ))}
                     </Select>
                   </FormControl>
@@ -627,7 +718,7 @@ const Dashboard = ({ user, onLogout, darkMode, toggleDarkMode }) => {
 
             {!loading && !error && tasks.length === 0 && (
               <Paper sx={{ p: 5, textAlign: "center", borderRadius: 2 }}>
-                <InfoIcon sx={{ fontSize: 60, color: "#ccc", mb: 2 }} />
+                <InfoIcon sx={{ fontSize: 60, color: "text.disabled", mb: 2 }} />
                 <Typography variant="h6">No tasks found yet.</Typography>
                 <Typography color="textSecondary">Try syncing your emails to generate tasks automatically!</Typography>
               </Paper>
@@ -684,17 +775,32 @@ const Dashboard = ({ user, onLogout, darkMode, toggleDarkMode }) => {
                                       >
                                         <CardContent sx={{ p: 2, "&:last-child": { pb: 2 } }}>
                                           <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1, alignItems: "center" }}>
-                                            <Chip 
-                                              label={task.priority} 
-                                              size="small" 
-                                              sx={{ 
-                                                height: "20px",
-                                                fontSize: "0.65rem",
-                                                bgcolor: getPriorityColor(task.priority), 
-                                                color: "white", 
-                                                fontWeight: "bold" 
-                                              }} 
-                                            />
+                                            <Box sx={{ display: "flex", gap: 0.5 }}>
+                                              <Chip 
+                                                label={task.priority} 
+                                                size="small" 
+                                                sx={{ 
+                                                  height: "20px",
+                                                  fontSize: "0.65rem",
+                                                  bgcolor: getPriorityColor(task.priority), 
+                                                  color: "white", 
+                                                  fontWeight: "bold" 
+                                                }} 
+                                              />
+                                              {task.category && (
+                                                <Chip 
+                                                  label={task.category} 
+                                                  size="small" 
+                                                  sx={{ 
+                                                    height: "20px",
+                                                    fontSize: "0.65rem",
+                                                    bgcolor: "action.selected", 
+                                                    color: "#1565c0", 
+                                                    fontWeight: "bold" 
+                                                  }} 
+                                                />
+                                              )}
+                                            </Box>
                                             {isEmailSourced(task) && (
                                               <Box sx={{ display: "flex", gap: 0.5 }}>
                                                 <Chip 
@@ -710,7 +816,7 @@ const Dashboard = ({ user, onLogout, darkMode, toggleDarkMode }) => {
                                                       label={task.syncedByEmail.split('@')[0]} 
                                                       size="small"
                                                       variant="contained"
-                                                      sx={{ height: "20px", fontSize: "0.6rem", bgcolor: "#e3f2fd", color: "#1976d2" }}
+                                                      sx={{ height: "20px", fontSize: "0.6rem", bgcolor: "action.selected", color: "#1976d2" }}
                                                     />
                                                   </Tooltip>
                                                 )}
@@ -718,9 +824,17 @@ const Dashboard = ({ user, onLogout, darkMode, toggleDarkMode }) => {
                                             )}
                                           </Box>
                                           
-                                          <Typography variant="subtitle1" sx={{ fontWeight: "bold", mb: 1, lineHeight: 1.3 }}>
-                                            {task.title}
-                                          </Typography>
+                                          <Box sx={{ display: "flex", alignItems: "flex-start", gap: 1, mb: 1 }}>
+                                            <Checkbox 
+                                              checked={task.status === "COMPLETED"} 
+                                              onChange={() => handleToggleTaskCompletion(task)}
+                                              size="small"
+                                              sx={{ p: 0, mt: 0.3 }}
+                                            />
+                                            <Typography variant="subtitle1" sx={{ fontWeight: "bold", lineHeight: 1.3, textDecoration: task.status === "COMPLETED" ? "line-through" : "none", color: task.status === "COMPLETED" ? "text.secondary" : "text.primary" }}>
+                                              {task.title}
+                                            </Typography>
+                                          </Box>
                                           
                                           <Box sx={{ mb: 2 }}>
                                             {task.description && task.description.includes("- [ ]") ? (
@@ -754,12 +868,20 @@ const Dashboard = ({ user, onLogout, darkMode, toggleDarkMode }) => {
                                           
                                           <Box sx={{ display: "flex", alignItems: "center", gap: 0.5, mb: 0.5 }}>
                                             <ClockIcon sx={{ fontSize: "0.9rem" }} color="action" />
-                                            <Typography variant="caption" sx={{ fontWeight: "bold", color: "#666" }}>
+                                            <Typography variant="caption" sx={{ fontWeight: "bold", color: "text.secondary" }}>
                                               {task.deadline ? new Date(task.deadline).toLocaleDateString() : 'No Deadline'}
                                             </Typography>
                                           </Box>
 
                                           <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 1, mt: 1 }}>
+                                            <Tooltip title="Focus Mode (Pomodoro)">
+                                              <IconButton 
+                                                size="small" 
+                                                onClick={() => { setFocusTask(task); setFocusTimeLeft(25 * 60); setIsFocusActive(false); }}
+                                              >
+                                                <NotificationsIcon fontSize="small" sx={{ color: "success.main" }} />
+                                              </IconButton>
+                                            </Tooltip>
                                             <Tooltip title="Add to Google Calendar">
                                               <IconButton 
                                                 size="small" 
@@ -788,11 +910,11 @@ const Dashboard = ({ user, onLogout, darkMode, toggleDarkMode }) => {
                 </DragDropContext>
             )}
           </>
-        ) : (
+        ) : activeMainTab === 1 ? (
           // CALENDAR VIEW (Upcoming Events)
           <>
              <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
-              <Typography variant="h4" sx={{ fontWeight: "bold", color: "#1565C0" }}>
+              <Typography variant="h4" sx={{ fontWeight: "bold", color: "primary.main" }}>
                 Upcoming Events Calendar
               </Typography>
               <Typography variant="body2" color="textSecondary">
@@ -801,7 +923,62 @@ const Dashboard = ({ user, onLogout, darkMode, toggleDarkMode }) => {
             </Box>
             <CalendarView tasks={tasks} />
           </>
-        )}
+        ) : activeMainTab === 2 ? (
+          // ANALYTICS DASHBOARD
+          <Box sx={{ mt: 2 }}>
+            <Typography variant="h4" sx={{ fontWeight: "bold", color: "primary.main", mb: 3 }}>
+              Productivity Analytics
+            </Typography>
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={6}>
+                <Paper sx={{ p: 4, borderRadius: 2 }}>
+                  <Typography variant="h6" sx={{ mb: 3, display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <PieChartIcon /> Task Completion Rate
+                  </Typography>
+                  <Box sx={{ mb: 2 }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                      <Typography variant="body1">Completed</Typography>
+                      <Typography variant="body1" fontWeight="bold">
+                        {tasks.length > 0 ? Math.round((tasks.filter(t => t.status === "COMPLETED").length / tasks.length) * 100) : 0}%
+                      </Typography>
+                    </Box>
+                    <LinearProgress variant="determinate" value={tasks.length > 0 ? (tasks.filter(t => t.status === "COMPLETED").length / tasks.length) * 100 : 0} color="success" sx={{ height: 10, borderRadius: 5 }} />
+                  </Box>
+                  <Box sx={{ mb: 2 }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                      <Typography variant="body1">Pending (To Do)</Typography>
+                      <Typography variant="body1" fontWeight="bold">
+                        {tasks.length > 0 ? Math.round((tasks.filter(t => t.status === "PENDING").length / tasks.length) * 100) : 0}%
+                      </Typography>
+                    </Box>
+                    <LinearProgress variant="determinate" value={tasks.length > 0 ? (tasks.filter(t => t.status === "PENDING").length / tasks.length) * 100 : 0} color="warning" sx={{ height: 10, borderRadius: 5 }} />
+                  </Box>
+                </Paper>
+              </Grid>
+              
+              <Grid item xs={12} md={6}>
+                <Paper sx={{ p: 4, borderRadius: 2 }}>
+                  <Typography variant="h6" sx={{ mb: 3, display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <ShowChartIcon /> Priority Distribution
+                  </Typography>
+                  {["HIGH", "MEDIUM", "LOW"].map((prio) => {
+                    const count = tasks.filter(t => t.priority === prio).length;
+                    const percent = tasks.length > 0 ? Math.round((count / tasks.length) * 100) : 0;
+                    return (
+                      <Box key={prio} sx={{ mb: 2 }}>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                          <Chip label={prio} size="small" sx={{ bgcolor: prio === 'HIGH' ? '#ff4d4d' : prio === 'MEDIUM' ? '#ffcc00' : '#4CAF50', color: 'white', fontWeight: 'bold' }} />
+                          <Typography variant="body2" fontWeight="bold">{count} Tasks ({percent}%)</Typography>
+                        </Box>
+                        <LinearProgress variant="determinate" value={percent} sx={{ height: 8, borderRadius: 4, bgcolor: '#f5f5f5', '& .MuiLinearProgress-bar': { bgcolor: prio === 'HIGH' ? '#ff4d4d' : prio === 'MEDIUM' ? '#ffcc00' : '#4CAF50' } }} />
+                      </Box>
+                    );
+                  })}
+                </Paper>
+              </Grid>
+            </Grid>
+          </Box>
+        ) : null}
 
       {/* Email Sync Dialog */}
       <Dialog
@@ -821,7 +998,7 @@ const Dashboard = ({ user, onLogout, darkMode, toggleDarkMode }) => {
                 </Alert>
               ) : (
                 <Box sx={{ marginBottom: "20px" }}>
-                  <Typography variant="body2" sx={{ fontWeight: "bold", marginBottom: "10px", color: "#666" }}>
+                  <Typography variant="body2" sx={{ fontWeight: "bold", marginBottom: "10px", color: "text.secondary" }}>
                     📧 Your Saved Accounts:
                   </Typography>
                   <Box sx={{ display: "flex", gap: "8px", flexWrap: "wrap", marginBottom: "15px" }}>
@@ -931,13 +1108,13 @@ const Dashboard = ({ user, onLogout, darkMode, toggleDarkMode }) => {
             <Box sx={{ 
               marginTop: "15px", 
               padding: "15px", 
-              backgroundColor: "#e3f2fd", 
+              backgroundColor: "action.selected", 
               borderRadius: "8px",
               borderLeft: "4px solid #1976d2"
             }}>
               <Box sx={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "10px" }}>
                 <CircularProgress size={24} color="inherit" />
-                <Typography variant="body2" sx={{ fontWeight: "bold", color: "#1565C0" }}>
+                <Typography variant="body2" sx={{ fontWeight: "bold", color: "primary.main" }}>
                   {syncProgress}
                 </Typography>
               </Box>
@@ -1030,7 +1207,7 @@ const Dashboard = ({ user, onLogout, darkMode, toggleDarkMode }) => {
                         }}
                       >
                         <Box sx={{ display: "flex", alignItems: "center", gap: "15px", flex: 1 }}>
-                          <EmailIcon sx={{ color: "#1565C0", fontSize: 28 }} />
+                          <EmailIcon sx={{ color: "primary.main", fontSize: 28 }} />
                           <Box>
                             <Typography variant="body1" sx={{ fontWeight: "bold" }}>
                               {acc.email}
@@ -1048,10 +1225,10 @@ const Dashboard = ({ user, onLogout, darkMode, toggleDarkMode }) => {
                             startIcon={<InfoIcon />}
                             onClick={() => handleOpenEmailInfo(acc)}
                             sx={{
-                              color: "#1565C0",
+                              color: "primary.main",
                               borderColor: "#1565C0",
                               "&:hover": {
-                                backgroundColor: "#e3f2fd",
+                                backgroundColor: "action.selected",
                               },
                             }}
                           >
@@ -1262,8 +1439,8 @@ const Dashboard = ({ user, onLogout, darkMode, toggleDarkMode }) => {
         maxWidth="sm"
         fullWidth
       >
-        <DialogTitle sx={{ display: "flex", alignItems: "center", gap: "10px", backgroundColor: "#e3f2fd", borderBottom: "2px solid #1565C0" }}>
-          <EmailIcon sx={{ color: "#1565C0" }} />
+        <DialogTitle sx={{ display: "flex", alignItems: "center", gap: "10px", backgroundColor: "action.selected", borderBottom: "2px solid #1565C0" }}>
+          <EmailIcon sx={{ color: "primary.main" }} />
           Email Account Information
         </DialogTitle>
         <DialogContent sx={{ paddingTop: "20px" }}>
@@ -1289,7 +1466,7 @@ const Dashboard = ({ user, onLogout, darkMode, toggleDarkMode }) => {
                       cursor: "pointer",
                       transition: "all 0.2s",
                       "&:hover": {
-                        backgroundColor: "#e3f2fd",
+                        backgroundColor: "action.selected",
                         borderColor: "#1565C0",
                       },
                     }}
@@ -1345,10 +1522,10 @@ const Dashboard = ({ user, onLogout, darkMode, toggleDarkMode }) => {
                   sx={{
                     justifyContent: "flex-start",
                     padding: "12px",
-                    color: "#1565C0",
+                    color: "primary.main",
                     borderColor: "#1565C0",
                     "&:hover": {
-                      backgroundColor: "#e3f2fd",
+                      backgroundColor: "action.selected",
                     },
                   }}
                 >
@@ -1365,10 +1542,10 @@ const Dashboard = ({ user, onLogout, darkMode, toggleDarkMode }) => {
                   sx={{
                     justifyContent: "flex-start",
                     padding: "12px",
-                    color: "#1565C0",
+                    color: "primary.main",
                     borderColor: "#1565C0",
                     "&:hover": {
-                      backgroundColor: "#e3f2fd",
+                      backgroundColor: "action.selected",
                     },
                   }}
                 >
@@ -1385,10 +1562,10 @@ const Dashboard = ({ user, onLogout, darkMode, toggleDarkMode }) => {
                   sx={{
                     justifyContent: "flex-start",
                     padding: "12px",
-                    color: "#1565C0",
+                    color: "primary.main",
                     borderColor: "#1565C0",
                     "&:hover": {
-                      backgroundColor: "#e3f2fd",
+                      backgroundColor: "action.selected",
                     },
                   }}
                 >
@@ -1401,7 +1578,7 @@ const Dashboard = ({ user, onLogout, darkMode, toggleDarkMode }) => {
               <Typography variant="body2" color="textSecondary">
                 💡 <strong>Tip:</strong> Click the above links to:
               </Typography>
-              <ul style={{ marginTop: "10px", paddingLeft: "20px", color: "#666", fontSize: "14px" }}>
+              <ul style={{ marginTop: "10px", paddingLeft: "20px", color: "text.secondary", fontSize: "14px" }}>
                 <li>Check your email inbox directly in Gmail</li>
                 <li>Update your security settings and 2FA</li>
                 <li>Revoke or create new app passwords</li>
@@ -1428,7 +1605,7 @@ const Dashboard = ({ user, onLogout, darkMode, toggleDarkMode }) => {
           Update Task Priority
         </DialogTitle>
         <DialogContent sx={{ paddingTop: "20px" }}>
-          <Typography variant="body2" sx={{ marginBottom: "15px", color: "#666" }}>
+          <Typography variant="body2" sx={{ marginBottom: "15px", color: "text.secondary" }}>
             Select a new priority level for this task:
           </Typography>
           
@@ -1673,6 +1850,13 @@ const Dashboard = ({ user, onLogout, darkMode, toggleDarkMode }) => {
             notificationMessage.includes("TODAY") ? <NotificationsIcon /> :
             <CheckCircleIcon />
           }
+          action={
+            undoTask && notificationMessage.includes("completed") ? (
+              <Button color="inherit" size="small" onClick={handleUndoComplete} sx={{ fontWeight: "bold" }}>
+                UNDO
+              </Button>
+            ) : null
+          }
         >
           {notificationMessage}
         </Alert>
@@ -1694,6 +1878,60 @@ const Dashboard = ({ user, onLogout, darkMode, toggleDarkMode }) => {
             🔄 Initial tasks synced! Older emails are being processed in the background. Refresh in a few minutes.
         </Alert>
       </Snackbar>
+
+      {/* Confetti Explosion Container */}
+      {isExploding && (
+        <Box sx={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 9999 }}>
+          <ConfettiExplosion force={0.8} duration={3000} particleCount={250} width={1600} />
+        </Box>
+      )}
+
+      {/* Auto-Reply Dialog */}
+      <Dialog open={openReplyDialog} onClose={() => setOpenReplyDialog(false)} maxWidth="sm" fullWidth>
+        <DialogTitle sx={{ display: 'flex', alignItems: 'center', gap: 1, bgcolor: 'primary.main', color: 'white' }}>
+          <EmailIcon /> Auto-Draft Follow-up Email
+        </DialogTitle>
+        <DialogContent sx={{ p: 3, mt: 2 }}>
+          <Typography variant="body1" sx={{ mb: 2 }}>
+            Would you like to send an automated confirmation email back to <strong>{replyTask?.senderEmail?.split('<')[0]}</strong> mentioning this task is done?
+          </Typography>
+          <TextField
+             multiline
+             rows={4}
+             fullWidth
+             variant="outlined"
+             defaultValue={replyTask ? `Hi,\n\nI just wanted to let you know that I have successfully completed the task: "${replyTask.title}".\n\nBest,\n${user?.name || "Student"}` : ''}
+          />
+        </DialogContent>
+        <DialogActions sx={{ p: 2, bgcolor: 'background.default' }}>
+          <Button onClick={() => setOpenReplyDialog(false)}>Skip</Button>
+          <Button variant="contained" color="primary" onClick={() => { setOpenReplyDialog(false); setNotificationMessage("📧 Follow-up email sent automatically!"); setShowNotification(true); }}>
+            Send Email
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Focus Mode Overlay */}
+      <Dialog open={Boolean(focusTask)} onClose={() => setFocusTask(null)} maxWidth="sm" fullWidth PaperProps={{ sx: { borderRadius: 4, overflow: 'hidden' }}}>
+        <Box sx={{ p: 5, textAlign: 'center', background: 'linear-gradient(135deg, #1e3c72 0%, #2a5298 100%)', color: 'white' }}>
+          <ClockIcon sx={{ fontSize: 60, mb: 2, opacity: 0.8 }} />
+          <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 1 }}>Deep Focus Mode</Typography>
+          <Typography variant="body1" sx={{ opacity: 0.8, mb: 4 }}>Working on: {focusTask?.title}</Typography>
+          
+          <Typography variant="h1" sx={{ fontWeight: 'bold', fontFamily: 'monospace', textShadow: '0 4px 10px rgba(0,0,0,0.3)', mb: 4 }}>
+            {formatTime(focusTimeLeft)}
+          </Typography>
+
+          <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
+            <Button variant="contained" color={isFocusActive ? "warning" : "success"} size="large" onClick={() => setIsFocusActive(!isFocusActive)} sx={{ borderRadius: 8, px: 4, fontWeight: 'bold' }}>
+              {isFocusActive ? "PAUSE" : "START FOCUS"}
+            </Button>
+            <Button variant="outlined" sx={{ color: 'white', borderColor: 'rgba(255,255,255,0.5)', borderRadius: 8 }} onClick={() => { setFocusTask(null); setIsFocusActive(false); }}>
+              Exit Focus
+            </Button>
+          </Box>
+        </Box>
+      </Dialog>
     </Box>
   );
 };

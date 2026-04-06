@@ -326,7 +326,7 @@ const Login = ({ onLoginSuccess }) => {
   };
 
   return (
-    <Box sx={{ minHeight: "100vh", bgcolor: "#d1d8e0", display: "flex", justifyContent: "center", alignItems: "center" }}>
+    <Box sx={{ minHeight: "100vh", bgcolor: "background.default", display: "flex", justifyContent: "center", alignItems: "center" }}>
       <Card
         sx={{
           display: "flex",
@@ -471,7 +471,7 @@ const Login = ({ onLoginSuccess }) => {
         <Box
           sx={{
             width: { xs: "100%", md: "55%" },
-            bgcolor: "#ffffff",
+            bgcolor: "background.paper",
             position: "relative",
             zIndex: 2,
             display: "flex",
@@ -502,7 +502,7 @@ const Login = ({ onLoginSuccess }) => {
                 "& .MuiTab-root": {
                   fontSize: "1rem",
                   fontWeight: "bold",
-                  color: "#555",
+                  color: "text.primary",
                 },
                 "& .Mui-selected": {
                   color: "#007bff !important",
@@ -516,7 +516,7 @@ const Login = ({ onLoginSuccess }) => {
             {/* LOGIN TAB */}
             {activeTab === 0 && (
               <Box component="form" onSubmit={handleLogin}>
-                <Typography variant="h5" sx={{ marginBottom: "25px", fontWeight: "bold", color: "#111" }}>
+                <Typography variant="h5" sx={{ marginBottom: "25px", fontWeight: "bold", color: "text.primary" }}>
                   Sign In to Your Account
                 </Typography>
 
@@ -535,7 +535,7 @@ const Login = ({ onLoginSuccess }) => {
                         <EmailIcon sx={{ color: "primary.main" }} />
                       </InputAdornment>
                     ),
-                    sx: { color: "#1a1a2e", fontWeight: 500 }
+                    sx: { color: "text.primary", fontWeight: 500 }
                   }}
                   variant="outlined"
                 />
@@ -566,7 +566,7 @@ const Login = ({ onLoginSuccess }) => {
                         </Button>
                       </InputAdornment>
                     ),
-                    sx: { color: "#1a1a2e", fontWeight: 500 }
+                    sx: { color: "text.primary", fontWeight: 500 }
                   }}
                   variant="outlined"
                 />
@@ -612,7 +612,7 @@ const Login = ({ onLoginSuccess }) => {
 
                 <Box sx={{ position: "relative", marginY: "25px", textAlign: "center" }}>
                   <Box sx={{ position: "absolute", top: "50%", left: 0, right: 0, height: "1px", backgroundColor: "#ccc", zIndex: 0 }} />
-                  <Typography variant="body2" sx={{ position: "relative", display: "inline-block", padding: "0 15px", backgroundColor: "white", color: "#333", fontWeight: "bold", zIndex: 1 }}>
+                  <Typography variant="body2" sx={{ position: "relative", display: "inline-block", padding: "0 15px", backgroundColor: "background.paper", color: "text.primary", fontWeight: "bold", zIndex: 1 }}>
                     OR
                   </Typography>
                 </Box>
@@ -626,7 +626,7 @@ const Login = ({ onLoginSuccess }) => {
                   sx={{
                     padding: "10px",
                     fontWeight: "bold",
-                    color: "#333",
+                    color: "text.primary",
                     borderColor: "#333",
                     textTransform: "none",
                     fontSize: "1rem",
@@ -642,7 +642,7 @@ const Login = ({ onLoginSuccess }) => {
 
 
 
-                <Typography variant="body2" sx={{ marginTop: "15px", textAlign: "center", color: "#333" }}>
+                <Typography variant="body2" sx={{ marginTop: "15px", textAlign: "center", color: "text.primary" }}>
                   Don't have an account?{" "}
                   <Button
                     size="small"
@@ -676,7 +676,7 @@ const Login = ({ onLoginSuccess }) => {
                         <PersonIcon sx={{ color: "primary.main" }} />
                       </InputAdornment>
                     ),
-                    sx: { color: "#1a1a2e", fontWeight: 500 }
+                    sx: { color: "text.primary", fontWeight: 500 }
                   }}
                   variant="outlined"
                 />
@@ -691,7 +691,7 @@ const Login = ({ onLoginSuccess }) => {
                   margin="normal"
                   disabled={loading}
                   InputProps={{
-                    sx: { color: "#1a1a2e", fontWeight: 500 }
+                    sx: { color: "text.primary", fontWeight: 500 }
                   }}
                   variant="outlined"
                 />
@@ -712,7 +712,7 @@ const Login = ({ onLoginSuccess }) => {
                         <EmailIcon sx={{ color: "primary.main" }} />
                       </InputAdornment>
                     ),
-                    sx: { color: "#1a1a2e", fontWeight: 500 }
+                    sx: { color: "text.primary", fontWeight: 500 }
                   }}
                   variant="outlined"
                 />
@@ -749,7 +749,7 @@ const Login = ({ onLoginSuccess }) => {
                       helperText={`Register number must be exactly 13 characters (${registerData.registerNumber.length}/13)`}
                       error={registerData.registerNumber.length > 0 && registerData.registerNumber.length !== 13}
                       InputProps={{
-                        sx: { color: "#1a1a2e", fontWeight: 500 }
+                        sx: { color: "text.primary", fontWeight: 500 }
                       }}
                       variant="outlined"
                     />
@@ -858,7 +858,7 @@ const Login = ({ onLoginSuccess }) => {
                         </Button>
                       </InputAdornment>
                     ),
-                    sx: { color: "#1a1a2e", fontWeight: 500 }
+                    sx: { color: "text.primary", fontWeight: 500 }
                   }}
                   variant="outlined"
                 />

@@ -77,17 +77,17 @@ const CalendarView = ({ tasks }) => {
 
   return (
     <Box sx={{ position: "relative", width: "100%" }}>
-      <Paper elevation={3} sx={{ p: { xs: 2, md: 4 }, borderRadius: 4, bgcolor: "white", minHeight: "80vh" }}>
+      <Paper elevation={3} sx={{ p: { xs: 2, md: 4 }, borderRadius: 4, bgcolor: "background.paper", minHeight: "80vh" }}>
         
         {/* Header Section */}
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 4, flexWrap: "wrap", gap: 2 }}>
           <Box>
-            <Typography variant="h3" sx={{ fontWeight: 800, color: "#1565C0", fontSize: { xs: "2rem", md: "3rem" } }}>
-              {monthNames[month]} <span style={{ color: "#999", fontWeight: 300 }}>{year}</span>
+            <Typography variant="h3" sx={{ fontWeight: 800, color: "primary.main", fontSize: { xs: "2rem", md: "3rem" } }}>
+              {monthNames[month]} <span style={{ color: "text.secondary", fontWeight: 300 }}>{year}</span>
             </Typography>
           </Box>
           <Stack direction="row" spacing={1} alignItems="center">
-            <IconButton onClick={prevMonth} sx={{ border: "1px solid #eee" }}><ChevronLeftIcon /></IconButton>
+            <IconButton onClick={prevMonth} sx={{ border: "1px solid", borderColor: "divider" }}><ChevronLeftIcon /></IconButton>
             <Button 
                 variant="outlined" 
                 onClick={() => setCurrentDate(new Date())}
@@ -95,7 +95,7 @@ const CalendarView = ({ tasks }) => {
             >
                 Today
             </Button>
-            <IconButton onClick={nextMonth} sx={{ border: "1px solid #eee" }}><ChevronRightIcon /></IconButton>
+            <IconButton onClick={nextMonth} sx={{ border: "1px solid", borderColor: "divider" }}><ChevronRightIcon /></IconButton>
           </Stack>
         </Box>
 
@@ -110,7 +110,7 @@ const CalendarView = ({ tasks }) => {
             <Typography key={day} variant="button" sx={{ 
               textAlign: "center", 
               fontWeight: 900, 
-              color: "#aaa",
+              color: "text.secondary",
               fontSize: "0.75rem",
               pb: 1
             }}>
@@ -137,17 +137,17 @@ const CalendarView = ({ tasks }) => {
                 sx={{
                   borderRadius: 3,
                   border: day ? "1px solid" : "none",
-                  borderColor: isToday ? "#1565C0" : "#f0f0f0",
-                  bgcolor: isToday ? "#f0f7ff" : day ? "white" : "transparent",
+                  borderColor: isToday ? "primary.main" : "divider",
+                  bgcolor: isToday ? "action.selected" : day ? "background.paper" : "transparent",
                   p: 2,
                   cursor: day ? "pointer" : "default",
                   transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                   visibility: day ? "visible" : "visible", // Maintain grid structure
                   "&:hover": day ? {
-                    bgcolor: "#f8f9fa",
+                    bgcolor: "action.hover",
                     boxShadow: "0 10px 25px rgba(0,0,0,0.06)",
                     transform: "translateY(-4px)",
-                    borderColor: "#1565C0",
+                    borderColor: "primary.main",
                     zIndex: 2
                   } : {}
                 }}
@@ -202,14 +202,14 @@ const CalendarView = ({ tasks }) => {
         <Box sx={{ p: 4 }}>
           <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 4 }}>
             <Box>
-                <Typography variant="h4" sx={{ fontWeight: 800, color: "#1565C0" }}>
+                <Typography variant="h4" sx={{ fontWeight: 800, color: "primary.main" }}>
                     {selectedDay} {monthNames[month]}
                 </Typography>
                 <Typography variant="subtitle1" color="textSecondary">
                     Details for selected date
                 </Typography>
             </Box>
-            <MuiIconButton onClick={() => setDrawerOpen(false)} sx={{ bgcolor: "#f5f5f5" }}>
+            <MuiIconButton onClick={() => setDrawerOpen(false)} sx={{ bgcolor: "action.hover" }}>
                 <CloseIcon />
             </MuiIconButton>
           </Box>
@@ -229,7 +229,7 @@ const CalendarView = ({ tasks }) => {
                     borderRadius: 4, 
                     borderLeft: `8px solid ${getPriorityColor(task.priority)}`,
                     transition: "transform 0.2s",
-                    "&:hover": { transform: "translateX(8px)", bgcolor: "#fafafa" }
+                    "&:hover": { transform: "translateX(8px)", bgcolor: "action.hover" }
                 }}>
                   <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
                     <Chip 
@@ -261,7 +261,7 @@ const CalendarView = ({ tasks }) => {
           )}
 
           <Box sx={{ mt: 5 }}>
-            <Button fullWidth variant="contained" size="large" sx={{ borderRadius: 4, py: 2, bgcolor: "#1565C0", fontWeight: "bold" }}>
+            <Button fullWidth variant="contained" size="large" sx={{ borderRadius: 4, py: 2, bgcolor: "primary.main", fontWeight: "bold" }}>
                 Export to Calendar
             </Button>
           </Box>

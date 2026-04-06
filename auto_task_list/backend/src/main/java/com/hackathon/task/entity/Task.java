@@ -27,10 +27,33 @@ public class Task {
 
     public enum Priority { HIGH, MEDIUM, LOW }
     public enum Status { PENDING, APPROVED, COMPLETED }
+    public enum Category { ACADEMIC, ADMINISTRATIVE, EXTRACURRICULAR, GENERAL }
+
+    @Enumerated(EnumType.STRING)
+    private Category category;
+
+    private String messageId;
+    private LocalDateTime receivedDate;
 
     // Getters and Setters
     public Long getId() {
         return id;
+    }
+    
+    public String getMessageId() {
+        return messageId;
+    }
+
+    public void setMessageId(String messageId) {
+        this.messageId = messageId;
+    }
+
+    public LocalDateTime getReceivedDate() {
+        return receivedDate;
+    }
+
+    public void setReceivedDate(LocalDateTime receivedDate) {
+        this.receivedDate = receivedDate;
     }
 
     public void setId(Long id) {
@@ -91,5 +114,13 @@ public class Task {
 
     public void setSyncedByEmail(String syncedByEmail) {
         this.syncedByEmail = syncedByEmail;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }
